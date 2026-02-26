@@ -35,3 +35,25 @@ window.addEventListener('scroll', function() {
         navbar.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
     }
 });
+
+// Fly Home Click Handler
+document.addEventListener('DOMContentLoaded', function() {
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'index.html'; // Redirect to homepage
+        });
+    }
+});
+
+// Placeholder code for search button
+document.addEventListener('DOMContentLoaded', function() {
+    const searchBtn = document.querySelector('.search-btn');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'booksearch.html'; // Redirect to flight search page
+        });
+    }
+});

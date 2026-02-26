@@ -1,0 +1,114 @@
+/* Import global styling from index */
+@import url("styles.css");
+
+/* Ensures no scroll appears */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Center the page */
+.auth-wrapper {
+    min-height: calc(100% - 70px); /* Adjustment for navbar height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--light-bg);
+}
+
+/* Nav Bar */
+.auth-navbar {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-bg) 100%);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.back {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s ease;
+    padding: 0.5rem 1rem;
+}
+
+/* Card */
+.auth-box {
+    width: 400px;
+    padding: 3rem 2.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+/* Title */
+.auth-box h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+/* Inputs */
+.auth-input {
+    width: 100%;
+    padding: 0.9rem;
+    margin-bottom: 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    transition: 0.3s ease;
+}
+
+.auth-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    outline: none;
+}
+
+/* Button */
+.auth-login-btn, .auth-register-btn {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary-color), var(--dark-bg));
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.auth-login-btn:hover, .auth-register-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+
+/* Auth switch text */
+.auth-switch {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+.auth-switch a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
