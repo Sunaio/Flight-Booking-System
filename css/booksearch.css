@@ -1,0 +1,90 @@
+/* Import global styling from index */
+@import url("styles.css");
+
+/* Search Section */
+.flight-search-section {
+    padding: 2rem 2rem 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+.flight-search-section h1 {
+    text-align: center;
+    padding: 0 0 2rem;
+    color: var(--primary-color);
+}
+
+.search-box {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 750px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.search-input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.search-input-group input {
+    padding: 0.9rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+/* Results */
+.results-section {
+    padding: 2rem;
+}
+
+.results-container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.flight-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.flight-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flight-info h3 {
+    margin-bottom: 0.4rem;
+}
+
+.flight-price h3 {
+    margin-bottom: 0.5rem;
+}
+
+.book-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.book-btn:hover {
+    background: #00b8d4;
+    transform: translateY(-2px);
+}

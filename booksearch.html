@@ -2,9 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Flight Booking</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Search</title>
+    <link rel="stylesheet" href="css/booksearch.css">
 </head>
 <body>
+    <!-- Navigation Bar -->
+   <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <h1>Fly</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="booksearch.html">Flight Search</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Search Section -->
+    <section class="flight-search-section">
+        <div class="search-box">
+            <h1>Search Flights</h1>
+            <form id="search-form" class="search-form">
+                <div class ="search-input-group">
+                    <input type="text" id="from" name="from" placeholder="From" required>
+                    <input type="text" id="to" name="to" placeholder="To" required>
+                </div>
+                <div class ="search-input-group">
+                    <input type="date" id="departure" name="departure" required>
+                    <input type="date" id="return">
+                </div>
+                <button type="submit" class="search-btn">Search Flights</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="results-container">
+            <h2>Available Flights</h2>
+            <div id="flightResults" class="flight-results">
+                <!-- Example Card -->
+                <div class="flight-card">
+                    <div class="flight-info">
+                        <h3>A</h3>
+                        <p>A</p>
+                        <p>A</p>
+                    </div>
+                    <div class="flight-price">
+                        <h3>$320</h3>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="js/flightsearch.js"></script>
 </body>
 </html>
