@@ -12,13 +12,12 @@ def get_connection():
 def get_flights():
     conn = get_connection()
     cursor = conn.cursor()
-
     cursor.execute("SELECT TOP 5 * FROM dbo.flight_db_cleaned")
+    columns = [col[0] for col in cursor.description]
     rows = cursor.fetchall()
-
+    data = [dict(zip(columns, row)) for row in rows]
     conn.close()
-
-    return {"rows": [str(r) for r in rows]}
+    return {"data": data}
 
 @app.get("/db-test")
 def db_test():
