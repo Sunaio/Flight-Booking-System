@@ -9,10 +9,7 @@ def get_connection():
     return pyodbc.connect(connection_str)
 
 @app.get("/flights")
-def get_flights(
-    page: int = Query(1, ge=1),
-    page_size: int = Query(10, ge=1, le=100)
-):
+def get_flights( page: int = Query(1, ge=1), page_size: int = Query(10, ge=1, le=100)):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -22,10 +19,10 @@ def get_flights(
         SELECT *
         FROM dbo.flight_db_cleaned
         ORDER BY (SELECT NULL)
-        OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+        OFFSET {offset} ROWS FETCH NEXT {page_size} ROWS ONLY
     """
 
-    cursor.execute(query, offset, page_size)
+    cursor.execute(query)
 
     columns = [col[0] for col in cursor.description]
     rows = cursor.fetchall()
