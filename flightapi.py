@@ -16,9 +16,14 @@ def get_flights(start: int = 1, end: int = 5):
     limit = end - start + 1
 
     query = """
-    SELECT *
+    SELECT 
+        CAST(owner AS VARCHAR(255)) AS owner,
+        CAST(type AS VARCHAR(255)) AS plane_type,
+        CAST(dep_airport AS VARCHAR(255)) AS dep_airport,
+        CAST(arr_airport AS VARCHAR(255)) AS arr_airport,
+        CAST(time AS VARCHAR(255)) AS departure_time
     FROM dbo.flight_db_cleaned
-    ORDER BY flight_number
+    ORDER BY CAST(owner AS VARCHAR(255))
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
 
