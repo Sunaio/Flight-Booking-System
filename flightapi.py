@@ -32,7 +32,7 @@ def get_flights(start: int = 1, end: int = 5):
         CAST(arr_airport AS VARCHAR(255)) AS arr_airport,
         CAST(time AS VARCHAR(255)) AS departure_time
     FROM dbo.flight_db_cleaned
-    ORDER BY CAST(time AS VARCHAR(255))
+    ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
 
