@@ -9,31 +9,16 @@ def get_connection():
     return pyodbc.connect(connection_str)
 
 @app.get("/flights")
-def get_flights( page: int = Query(1, ge=1), page_size: int = Query(10, ge=1, le=100)):
+def get_flights():
     conn = get_connection()
     cursor = conn.cursor()
 
-    offset = (page - 1) * page_size
-
-    query = """
-        SELECT *
-        FROM dbo.flight_db_cleaned
-        ORDER BY (SELECT NULL)
-        OFFSET {offset} ROWS FETCH NEXT {page_size} ROWS ONLY
-    """
-
-    cursor.execute(query)
-
-    columns = [col[0] for col in cursor.description]
+    cursor.execute("SELECT TOP 5 * FROM dbo.flight_db_cleaned")
     rows = cursor.fetchall()
 
     conn.close()
 
-    return {
-        "page": page,
-        "page_size": page_size,
-        "data": [dict(zip(columns, row)) for row in rows]
-    }
+    return {"rows": [str(r) for r in rows]}
 
 @app.get("/db-test")
 def db_test():
