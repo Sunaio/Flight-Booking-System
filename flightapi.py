@@ -46,7 +46,8 @@ def get_flights(start: int = 1, end: int = 5):
         "pagination": {
             "start": start,
             "end": end,
-            "page_size": (start // limit) + 1
+            "page_size": limit,
+            "page": ((start - 1) // limit) + 1
         }
     }
 
