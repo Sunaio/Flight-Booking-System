@@ -1,8 +1,17 @@
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import pyodbc
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_connection():
     connection_str = os.getenv("DB_ACCESS_KEY")
@@ -23,7 +32,7 @@ def get_flights(start: int = 1, end: int = 5):
         CAST(arr_airport AS VARCHAR(255)) AS arr_airport,
         CAST(time AS VARCHAR(255)) AS departure_time
     FROM dbo.flight_db_cleaned
-    ORDER BY CAST(owner AS VARCHAR(255))
+    ORDER BY CAST(time AS VARCHAR(255))
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
 
