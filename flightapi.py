@@ -20,7 +20,7 @@ def get_flights(
 
     query = """
         SELECT *
-        FROM dbo.flight_data
+        FROM dbo.flight_db_cleaned
         OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
 
@@ -43,7 +43,7 @@ def db_test():
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT TOP 1 * FROM dbo.flight_data")
+        cursor.execute("SELECT TOP 1 * FROM dbo.flight_db_cleaned")
         row = cursor.fetchone()
 
         conn.close()
