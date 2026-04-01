@@ -5,11 +5,7 @@ flight_data <- read_csv("flights_db.csv")
 
 # Airline List
 airlines <- c(
-  "Delta", "American", "United", "Southwest", "Spirit", "JetBlue", "Alaska", "Frontier",
-  "Ryanair", "easyJet", "WestJet", "Virgin Atlantic", "Virgin Australia", "Lufthansa", 
-  "Emirates", "Cathay Pacific", "Qatar Airways", "All Nippon Airways", "ANA", "Etihad", 
-  "Qantas", "Aeroflot", "Aer Lingus", "Horizon Air", "Boliviana de Aviacion", 
-  "Aerolineas Argentinas", "Air Canada", "Turkish Airlines", "Singapore Airlines"
+  "Delta Airline", "American Airline", "United Airline", "Southwest Airlines", "Alaska Airlines", "Spirit Airline"
 )
 
 # Filtering out data (empty and non commercial)
@@ -32,12 +28,14 @@ flight_data_clean_rv <- flight_data_clean %>%
 # Reformatting timestamp (removing at 'time' after date)
 flight_data_clean_final <- flight_data_clean_rv %>%
   mutate(
-    temp = str_remove(timestamp_read, "at .*"),
-    temp = str_remove(temp, "\\d{1,2}:\\d{2}"),
-    temp = str_remove(temp, "th|st|nd|rd"),
-    date = dmy(temp)
-    ) %>%
-  select(-temp)
+    timestamp_clean = str_remove_all(timestamp_read, "th|st|nd|rd"),
+    timestamp_clean = str_replace(timestamp_clean, " at ", " "),
+    datetime = lubridate::dmy_hm(timestamp_clean),
+    
+    date = as.Date(datetime),
+    time = format(datetime, "%I:%M %p")
+  ) %>%
+  select(-timestamp_clean, -datetime)
 
 # Deleting timestamp_read
 flight_data_clean_final <- flight_data_clean_final %>%
