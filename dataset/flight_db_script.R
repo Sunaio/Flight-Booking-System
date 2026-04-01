@@ -5,16 +5,12 @@ flight_data <- read_csv("flights_db.csv")
 
 # Airline List
 airlines <- c(
-  "Delta Airline", "American Airline", "United Airline", "Southwest Airlines", "Alaska Airlines", "Spirit Airline"
+  "Delta Airline", "American Airline", "United Airline", "Spirit Airline", "Frontier Airlines"
 )
 
 # Filtering out data (empty and non commercial)
 flight_data_clean <- flight_data %>%
   filter(
-    type != "-" & type != "Unknown / Various" & !is.na(type),
-    type_icao != "-" & type_icao != "0000" & !is.na(type_icao),
-    flight_number!= "Unknown" & flight_number != "-" & !is.na(flight_number),
-    distance != "0" & !is.na(distance),
     str_detect(tolower(owner), paste(tolower(airlines), collapse = "|")),
     !str_detect(tolower(owner), "\\("),
     !str_detect(tolower(owner), "cargo")
@@ -33,13 +29,37 @@ flight_data_clean_final <- flight_data_clean_rv %>%
     datetime = lubridate::dmy_hm(timestamp_clean),
     
     date = as.Date(datetime),
-    time = format(datetime, "%I:%M %p")
+    time = format(datetime, "%I:%M %p"),
+    
+    # Replace 2024 or 2025 years with 2026
+    date = if_else(
+      lubridate::year(date) %in% c(2024, 2025),
+      as.Date(paste0("2026", format(date, "-%m-%d"))),
+      date
+    )
   ) %>%
   select(-timestamp_clean, -datetime)
 
 # Deleting timestamp_read
 flight_data_clean_final <- flight_data_clean_final %>%
   select(-timestamp_read)
+
+# Randomly change 1000 entries to include months 1-5
+set.seed(42)
+random_rows <- sample(nrow(flight_data_clean_final), 700)
+random_months <- sample(c(1:5, 7:8), 700, replace = TRUE)
+
+original_days <- as.integer(format(flight_data_clean_final$date[random_rows], "%d"))
+
+max_days <- days_in_month(as.Date(paste0("2026-", random_months, "-01")))
+clamped_days <- pmin(original_days, max_days)
+
+flight_data_clean_final$date[random_rows] <- as.Date(paste0(
+  "2026-",
+  random_months,
+  "-",
+  clamped_days
+))
 
 # Output
 write_csv(flight_data_clean_final, "flight_db_cleaned.csv")

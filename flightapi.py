@@ -27,7 +27,7 @@ def get_flights(start: int = 1, end: int = 5):
     query = """
     SELECT 
         CAST(owner AS VARCHAR(255)) AS owner,
-        CAST(type AS VARCHAR(255)) AS plane_type,
+        CAST(type_icao AS VARCHAR(255)) AS plane_type,
         CAST(dep_airport AS VARCHAR(255)) AS dep_airport,
         CAST(arr_airport AS VARCHAR(255)) AS arr_airport,
         CAST(date AS VARCHAR(255)) AS departure_date,
