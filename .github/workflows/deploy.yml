@@ -29,6 +29,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: FlightBooking
+          app-name: FlightAPI
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C0DD19BC45244FDE898439A69253D6F6 }}
           package: release.zip
