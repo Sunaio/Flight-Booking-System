@@ -36,3 +36,22 @@ def get_flights(
         "page_size": page_size,
         "data": [dict(zip(columns, row)) for row in rows]
     }
+
+@app.get("/db-test")
+def db_test():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT TOP 1 * FROM dbo.flight_data")
+        row = cursor.fetchone()
+
+        conn.close()
+
+        if row:
+            return {"status": "DB connected", "sample_row": str(row)}
+        else:
+            return {"status": "DB connected but no data"}
+
+    except Exception as e:
+        return {"status": "FAILED", "error": str(e)}
