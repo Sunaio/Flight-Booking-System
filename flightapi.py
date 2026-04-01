@@ -21,7 +21,6 @@ def get_flights(
     query = """
         SELECT *
         FROM dbo.flight_data
-        ORDER BY (time)
         OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
 
