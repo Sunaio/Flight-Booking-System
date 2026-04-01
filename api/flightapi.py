@@ -5,8 +5,8 @@ import pyodbc
 app = FastAPI()
 
 def get_connection():
-    connection = os.getenv("DB_ACCESS_KEY")
-    return pyodbc.connect(conection)
+    connection_str = os.getenv("DB_ACCESS_KEY")
+    return pyodbc.connect(connection_str)
 
 @app.get("/")
 def home():
