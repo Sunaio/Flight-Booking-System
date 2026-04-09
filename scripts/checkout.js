@@ -1,0 +1,129 @@
+const params = new URLSearchParams(window.location.search);
+let flight = {};
+try {
+    flight = JSON.parse(decodeURIComponent(params.get("flight") || "{}"));
+} catch (e) {
+    console.error("Failed to parse flight data:", e);
+}
+
+// Populate flight summary
+document.getElementById("depAirport").textContent  = flight.dep_airport  || "—";
+document.getElementById("arrAirport").textContent  = flight.arr_airport  || "—";
+document.getElementById("flightCost").textContent = flight.cost != null ? "$" + flight.cost : "";
+document.getElementById("date").textContent = flight.departure_date || "-";
+document.getElementById("time").textContent = flight.departure_time && flight.arrival_time ? `${flight.departure_time} → ${flight.arrival_time}` : "-";
+
+// Seat mappings
+const ROWS = 20;
+const COLS = ["A", "B", "C", "D", "E", "F"];
+
+function isTaken(row, col) {
+    const seed = (row * 7 + COLS.indexOf(col) * 13) % 10;
+    return seed < 3; // ~30% seats taken
+}
+
+let selectedSeat = null;
+
+function buildSeatGrid(cabin) {
+    const grid = document.getElementById("seatGrid");
+    grid.innerHTML = "";
+
+    const startRow = cabin === "first" ? 1 : cabin === "business" ? 4 : 8;
+    const numRows  = cabin === "first" ? 3 : cabin === "business" ? 4 : ROWS - 8;
+
+    for (let r = startRow; r < startRow + numRows; r++) {
+        const rowEl = document.createElement("div");
+        rowEl.className = "seat-row";
+
+        // Row number label
+        const numEl = document.createElement("span");
+        numEl.className = "row-num";
+        numEl.textContent = r;
+        rowEl.appendChild(numEl);
+
+        COLS.forEach((col, ci) => {
+            // Aisle gap between C and D
+            if (ci === 3) {
+                const gap = document.createElement("div");
+                gap.className = "aisle-gap";
+                rowEl.appendChild(gap);
+            }
+
+            const seatId = `${r}${col}`;
+            const taken  = isTaken(r, col);
+
+            const seat = document.createElement("div");
+            seat.className = "seat" + (taken ? " taken" : "");
+            seat.dataset.seat = seatId;
+            seat.textContent = seatId;
+
+            if (!taken) {
+                seat.addEventListener("click", () => selectSeat(seat, seatId));
+                if (selectedSeat === seatId) seat.classList.add("selected");
+            }
+            rowEl.appendChild(seat);
+        });
+
+        grid.appendChild(rowEl);
+    }
+}
+
+function selectSeat(el, seatId) {
+    document.querySelectorAll(".seat.selected").forEach(s => s.classList.remove("selected"));
+    el.classList.add("selected");
+    selectedSeat = seatId;
+    document.getElementById("selectedSeatDisplay").textContent = seatId;
+    let extraFee = 0;
+    let cabin = document.querySelector(".tab.active").dataset.class;
+    // Economy base - Free, Window +$25
+    // Business +$400 fee, All seats free
+    // First class +$600 fee, All seats free
+    if(cabin === "economy" && (seatId.endsWith("A") || seatId.endsWith("F"))) {
+        extraFee = 25; // Economy window seat fee
+    }else if(cabin === "business") {
+        extraFee = 400; // Business class fee
+    }else if(cabin === "first") {
+        extraFee = 600; // First class fee
+    }
+
+    let totalCost = Number(flight.cost) + extraFee;
+    document.getElementById("flightCost").textContent = "$" + totalCost;
+}
+
+// Tab switching
+document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        buildSeatGrid(tab.dataset.class);
+    });
+});
+
+buildSeatGrid("economy");
+
+document.getElementById("bookingForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (!selectedSeat) {
+        alert("Please select a seat before confirming.");
+        return;
+    }
+
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName  = document.getElementById("lastName").value.trim();
+
+    // Build confirmation message
+    const route = `${flight.dep_airport || "?"} → ${flight.arr_airport || "?"}`;
+    document.getElementById("confirmSummary").innerHTML =
+        `${lastName}, ${firstName} <br>
+        ${route} <br>
+        Seat: ${selectedSeat} <br>
+        Cost: ${document.getElementById("flightCost").textContent}`;
+
+    document.getElementById("confirmPopup").hidden = false;
+});
+
+document.querySelector("#confirmPopup .submit-btn").addEventListener("click", () => {
+    document.getElementById("confirmPopup").hidden = true;
+    document.getElementById("bookingConfirmPopup").hidden = false;
+});
