@@ -59,10 +59,15 @@ function renderFlights(flights) {
                 <div class="plane-type">
                     <span>${flight.plane_type || "Unknown Plane Type"}</span>
                 </div>
-                <div class="route">
+                <div class="route_iata">
                     <span>${flight.dep_airport}</span>
                     <span class="route-arrow">→</span>
                     <span>${flight.arr_airport}</span>
+                </div>
+                <div class="route_name">
+                    <span>${flight.dep_airport_name}</span>
+                    <span class="route-arrow">→</span>
+                    <span>${flight.arr_airport_name}</span>
                 </div>
                 <div class="date">
                     <span>${flight.departure_date || "Unknown Date"}</span>
