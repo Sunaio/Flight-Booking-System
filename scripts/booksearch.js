@@ -56,23 +56,27 @@ function renderFlights(flights) {
                 <div class="airline-sec">
                     <span class="airline-name">${flight.owner || "Unknown Airline"}</span>
                 </div>
-                <div class="plane-type">
+                <div class="flight-num">
+                    <span>${flight.flight_number || "Unknown Flight Number"}</span>
+                </div>
+                <div class="plane-info">
                     <span>${flight.plane_type || "Unknown Plane Type"}</span>
+                    <span>${flight.plane_icao || "Unknown ICAO"}</span>
                 </div>
                 <div class="route_iata">
-                    <span>${flight.dep_airport}</span>
+                    <span>${flight.dep_airport || "Unknown Departure Airport"}</span>
                     <span class="route-arrow">→</span>
-                    <span>${flight.arr_airport}</span>
+                    <span>${flight.arr_airport || "Unknown Arrival Airport"}</span>
                 </div>
                 <div class="route_name">
-                    <span>${flight.dep_airport_name}</span>
+                    <span>${flight.dep_airport_name || "Unknown Departure Airport Name"}</span>
                     <span class="route-arrow">→</span>
-                    <span>${flight.arr_airport_name}</span>
+                    <span>${flight.arr_airport_name || "Unknown Arrival Airport Name"}</span>
                 </div>
                 <div class="date">
                     <span>${flight.departure_date || "Unknown Date"}</span>
                 </div>
-                <div class="times">${flight.departure_time || ""} → ${flight.arrival_time || ""}</div>
+                <div class="times">${flight.departure_time || "Unknown Departure Time"} → ${flight.arrival_time || "Unknown Arrival Time"}</div>
             </div>
             <div class="flight-right">
                 <span class="price">${flight.cost != null ? "$" + flight.cost : "N/A"}</span>
