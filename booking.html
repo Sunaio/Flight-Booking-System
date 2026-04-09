@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Flight</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+    <main class="booking-page">
+        <div class="card" id="flightSummaryCard">
+            <p class="card-label">Flight summary</p>
+            <div class="flight-summary">
+                <div>
+                    <div class="route">
+                        <span id="depAirport"></span>
+                        <span class="route-arrow">→</span>
+                        <span id="arrAirport"></span>
+                    </div>
+                    <p class="meta" id="airlineMeta"></p>
+                    <p class="meta" id="timeMeta"></p>
+                </div>
+                <div class="price-tag" id="priceDisplay"></div>
+            </div>
+        </div>
+
+        <!-- Seat Selection -->
+        <div class="card">
+            <p class="card-label">Select a seat</p>
+            <div class="class-tabs">
+                <button class="tab active" data-class="first">First</button>
+                <button class="tab" data-class="business">Business</button>
+                <button class="tab" data-class="economy">Economy</button>
+            </div>
+            <div class="seat-map">
+                <div class="seat-labels">
+                    <span></span>
+                    <span>A</span><span>B</span><span>C</span>
+                    <span class="aisle"></span>
+                    <span>D</span><span>E</span><span>F</span>
+                </div>
+                <div id="seatGrid" class="seat-grid"></div>
+            </div>
+            <div class="legend">
+                <span class="legend-item"><span class="legend-dot available"></span>Available</span>
+                <span class="legend-item"><span class="legend-dot taken"></span>Taken</span>
+                <span class="legend-item"><span class="legend-dot selected"></span>Selected</span>
+            </div>
+            <p class="selected-seat-label">Selected seat: <strong id="selectedSeatDisplay">None</strong></p>
+        </div>
+
+        <!-- Passenger Details -->
+        <div class="card">
+            <p class="card-label">Passenger details</p>
+            <form id="bookingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First name</label>
+                        <input type="text" id="firstName" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last name</label>
+                        <input type="text" id="lastName" placeholder="Last Name" required>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">Confirm booking</button>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal-overlay" hidden>
+        <div class="modal">
+            <div class="modal-icon">✓</div>
+            <h2>Booking confirmed!</h2>
+            <p id="confirmSummary"></p>
+            <button class="submit-btn" onclick="window.location.href='booksearch.html'">Back to search</button>
+        </div>
+    </div>
+    <script src="scripts/booking.js"></script>
+</body>
+</html>
