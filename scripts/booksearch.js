@@ -70,7 +70,7 @@ function renderFlights(flights) {
                 <div class="times">${flight.departure_time || ""} → ${flight.arrival_time || ""}</div>
             </div>
             <div class="flight-right">
-                <span class="price">${flight.price != null ? "$" + flight.price : "N/A"}</span>
+                <span class="price">${flight.cost != null ? "$" + flight.cost : "N/A"}</span>
                 <button class="book-btn">Book now</button>
             </div>
         `;
