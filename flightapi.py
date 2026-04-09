@@ -60,7 +60,7 @@ def db_test():
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT TOP 1 * FROM dbo.flight_db_cleaned")
+        cursor.execute("SELECT TOP 1 * FROM flights.flight_data")
         row = cursor.fetchone()
 
         conn.close()
