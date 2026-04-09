@@ -30,6 +30,8 @@ def get_flights(start: int = 1, end: int = 5):
         CAST(type_icao AS VARCHAR(255)) AS plane_type,
         CAST(dep_airport_iata AS VARCHAR(255)) AS dep_airport,
         CAST(arr_airport_iata AS VARCHAR(255)) AS arr_airport,
+        CAST(dep_airport AS VARCHAR(255)) AS dep_airport_name,
+        CAST(arr_airport AS VARCHAR(255)) AS arr_airport_name,
         CAST(date AS VARCHAR(255)) AS departure_date,
         CAST(time AS VARCHAR(255)) AS departure_time,
         CAST(time_arr AS VARCHAR(255)) AS arrival_time,
