@@ -1,4 +1,5 @@
 library(tidyverse)
+library(lubridate)
 
 #Import dataset
 flight_data <- read_csv("flights_db.csv")
@@ -60,6 +61,36 @@ flight_data_clean_final$date[random_rows] <- as.Date(paste0(
   "-",
   clamped_days
 ))
+
+# Arr time calculation
+flight_data_clean_final <- flight_data_clean_final %>%
+  mutate(
+    # Combine date + time into datetime
+    datetime_dep = ymd_hm(paste(date, time)),
+    
+    # Add fractional hours
+    datetime_arr = datetime_dep + dhours(rough_flight_time),
+    
+    # Extract arrival time
+    time_arr = format(datetime_arr, "%I:%M %p")
+  ) %>%
+  select(-datetime_dep, -datetime_arr)
+
+# Flight cost calculation
+flight_data_clean_final <- flight_data_clean_final %>%
+  mutate(
+    cost = case_when(
+      distance <= 250  ~ distance * 0.85,
+      distance <= 999  ~ distance * 0.45,
+      distance <= 1999 ~ distance * 0.25,
+      distance >= 2000 ~ distance * 0.15
+    ) + 100 + 25,  # service + food costs
+    cost = round(cost)
+  )
+
+# Final columns removals
+flight_data_clean_final <- flight_data_clean_final %>%
+  select(-rough_flight_time, -distance)
 
 # Output
 write_csv(flight_data_clean_final, "flight_db_cleaned.csv")
