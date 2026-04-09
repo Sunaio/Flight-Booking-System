@@ -30,10 +30,10 @@ def get_flights(start: int = 1, end: int = 5):
         CAST(type_icao AS VARCHAR(255)) AS plane_type,
         CAST(dep_airport_iata AS VARCHAR(255)) AS dep_airport,
         CAST(arr_airport_iata AS VARCHAR(255)) AS arr_airport,
-        CAST(date AS DATE) AS departure_date,
-        CAST(time AS TIME) AS departure_time,
-        CAST(time_arr AS TIME) AS arrival_time,
-        CAST(cost AS int) AS cost
+        CAST(date AS VARCHAR(255)) AS departure_date,
+        CAST(time AS VARCHAR(255)) AS departure_time,
+        CAST(time_arr AS VARCHAR(255)) AS arrival_time,
+        CAST(cost AS VARCHAR(255)) AS cost
     FROM flights.flight_data
     ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
