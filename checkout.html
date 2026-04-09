@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Book Flight</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/booking.css">
+    <link rel="stylesheet" href="css/checkout.css">
 </head>
 <body>
     <main class="booking-page">
@@ -17,10 +17,12 @@
                         <span class="route-arrow">→</span>
                         <span id="arrAirport"></span>
                     </div>
-                    <p class="meta" id="airlineMeta"></p>
-                    <p class="meta" id="timeMeta"></p>
+                    <p class="meta" id="date"></p>
+                    <p class="meta" id="time"></p>
                 </div>
-                <div class="price-tag" id="priceDisplay"></div>
+                <div class="price-tag" id="priceDisplay">
+                    <span id="flightCost"></span>
+                </div>
             </div>
         </div>
 
@@ -28,9 +30,9 @@
         <div class="card">
             <p class="card-label">Select a seat</p>
             <div class="class-tabs">
-                <button class="tab active" data-class="first">First</button>
+                <button class="tab active" data-class="economy">Economy</button>
                 <button class="tab" data-class="business">Business</button>
-                <button class="tab" data-class="economy">Economy</button>
+                <button class="tab" data-class="first">First</button>
             </div>
             <div class="seat-map">
                 <div class="seat-labels">
@@ -64,20 +66,31 @@
                     </div>
                 </div>
                 <button type="submit" class="submit-btn">Confirm booking</button>
+                <button type="button" class="cancel-btn" onclick="window.location.href='booksearch.html'">Cancel Booking</button>
             </form>
         </div>
 
     </main>
 
-    <!-- Confirmation Modal -->
-    <div id="confirmModal" class="modal-overlay" hidden>
-        <div class="modal">
-            <div class="modal-icon">✓</div>
-            <h2>Booking confirmed!</h2>
+    <!-- Confirmation Popup -->
+    <div id="confirmPopup" class="popup-overlay" hidden>
+        <div class="popup">
+            <h2>Check your information!</h2>
             <p id="confirmSummary"></p>
-            <button class="submit-btn" onclick="window.location.href='booksearch.html'">Back to search</button>
+            <button class="submit-btn">Submit</button>
+            <button class="cancel-btn" onclick="document.getElementById('confirmPopup').hidden = true">Cancel</button>
         </div>
     </div>
-    <script src="scripts/booking.js"></script>
+
+    <!-- Booking Confirmation -->
+     <div id="bookingConfirmPopup" class="popup-overlay" hidden>
+        <div class="popup">
+            <div class="popup-icon">✓</div>
+            <h2>Booking Confirmed!</h2>
+            <p>Your flight has been successfully booked.</p>
+            <button class="submit-btn" onclick="window.location.href='booksearch.html'">Exit</button>
+        </div>
+    </div>
+    <script src="scripts/checkout.js"></script>
 </body>
 </html>

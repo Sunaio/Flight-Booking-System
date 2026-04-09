@@ -83,6 +83,23 @@ function renderFlights(flights) {
                 <button class="book-btn">Book now</button>
             </div>
         `;
+        
+        const bookBtn = card.querySelector(".book-btn");
+        const flightData = {
+            id: flight.flight_number,
+            dep_airport: flight.dep_airport,
+            arr_airport: flight.arr_airport,
+            departure_date: flight.departure_date,
+            departure_time: flight.departure_time,
+            arrival_time: flight.arrival_time,
+            cost: flight.cost
+        };
+
+        bookBtn.addEventListener("click", () => {
+        const flightsParam = encodeURIComponent(JSON.stringify(flightData));
+        window.location.href = `checkout.html?flight=${flightsParam}`;
+        });
+
         resultsDiv.appendChild(card);
     });
 }
