@@ -30,8 +30,8 @@ def get_flights(start: int = 1, end: int = 5):
         CAST(type_icao AS VARCHAR(255)) AS plane_type,
         CAST(dep_airport AS VARCHAR(255)) AS dep_airport,
         CAST(arr_airport AS VARCHAR(255)) AS arr_airport,
-        CAST(date AS VARCHAR(255)) AS departure_date,
-        CAST(time AS VARCHAR(255)) AS departure_time
+        CAST(date AS DATE) AS departure_date,
+        CAST(time AS TIME) AS departure_time
     FROM dbo.flight_db_cleaned
     ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
