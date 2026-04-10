@@ -14,7 +14,8 @@ flight_data_clean <- flight_data %>%
   filter(
     str_detect(tolower(owner), paste(tolower(airlines), collapse = "|")),
     !str_detect(tolower(owner), "\\("),
-    !str_detect(tolower(owner), "cargo")
+    !str_detect(tolower(owner), "cargo"),
+    distance != 0
   )
 
 # Removing unnecessary column datas
@@ -80,11 +81,11 @@ flight_data_clean_final <- flight_data_clean_final %>%
 flight_data_clean_final <- flight_data_clean_final %>%
   mutate(
     cost = case_when(
-      distance <= 250  ~ distance * 0.85,
-      distance <= 999  ~ distance * 0.45,
-      distance <= 1999 ~ distance * 0.25,
-      distance >= 2000 ~ distance * 0.15
-    ) + 100 + 25,  # service + food costs
+      distance <= 250  ~ distance * 0.009,
+      distance <= 999  ~ distance * 0.007,
+      distance <= 1999 ~ distance * 0.004,
+      distance >= 2000 ~ distance * 0.05
+    ) + 50 + 25,  # service + food costs
     cost = round(cost)
   )
 
