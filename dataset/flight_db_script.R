@@ -78,20 +78,61 @@ flight_data_clean_final <- flight_data_clean_final %>%
   select(-datetime_dep, -datetime_arr)
 
 # Flight cost calculation
+distance_comp <- function(distance) {
+  ifelse(distance < 500, distance * 0.2,
+         ifelse(distance < 1500, distance * 0.14,
+                distance * 0.10))
+}
+
+duration_comp <- function(time) {
+  minutes <- time * 60
+  minutes * 0.5
+}
+
+international_multiplier <- function(dep, arr) {
+  ifelse(dep != arr, 1.25, 1.0)
+}
+
+airline_multiplier <- function(owner) {
+  case_when(
+    owner == "Delta Airline" ~ 1.15,
+    owner == "United Airline" ~ 1.12,
+    owner == "American Airline" ~ 1.10,
+    owner == "Spirit Airline" ~ 0.75,
+    owner == "Frontier Airlines" ~ 0.70,
+    TRUE ~ 1.0
+  )
+}
+
+aircraft_multiplier <- function(type) {
+  case_when(
+    str_detect(type, "787|777") ~ 1.15,
+    str_detect(type, "737|A320") ~ 1.00,
+    TRUE ~ 0.97
+  )
+}
+
 flight_data_clean_final <- flight_data_clean_final %>%
   mutate(
-    cost = case_when(
-      distance <= 250  ~ distance * 0.009,
-      distance <= 999  ~ distance * 0.007,
-      distance <= 1999 ~ distance * 0.004,
-      distance >= 2000 ~ distance * 0.05
-    ) + 50 + 25,  # service + food costs
-    cost = round(cost)
+    base_fee = 40,
+    
+    cost_raw = base_fee +
+      distance_comp(distance) +
+      duration_comp(rough_flight_time),
+    
+    multiplier =
+      international_multiplier(dep_airport_country, arr_airport_country) *
+      airline_multiplier(owner) *
+      aircraft_multiplier(type),
+    
+    noise = runif(n(), -15, 15),
+    
+    cost = round(cost_raw * multiplier + noise, 2)
   )
 
 # Final columns removals
 flight_data_clean_final <- flight_data_clean_final %>%
-  select(-rough_flight_time, -distance)
+  select(-rough_flight_time, -distance, -noise, -multiplier, -cost_raw, -base_fee)
 
 # Output
 write_csv(flight_data_clean_final, "flight_db_cleaned.csv")
