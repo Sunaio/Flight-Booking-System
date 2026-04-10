@@ -127,7 +127,7 @@ flight_data_clean_final <- flight_data_clean_final %>%
     
     noise = runif(n(), -15, 15),
     
-    cost = round(cost_raw * multiplier + noise, 2)
+    cost = round(cost_raw * multiplier + noise)
   )
 
 # Final columns removals
