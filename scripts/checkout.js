@@ -6,12 +6,23 @@ try {
     console.error("Failed to parse flight data:", e);
 }
 
+// 12-hour Time formatting
+function formatTime(timeStr) {
+    if (!timeStr) return "Unknown Time";
+    const [hour, minute] = timeStr.split(":");
+    let hours = parseInt(hour);
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    return `${hours}:${minute} ${ampm}`;
+}
+
 // Populate flight summary
 document.getElementById("depAirport").textContent  = flight.dep_airport  || "—";
 document.getElementById("arrAirport").textContent  = flight.arr_airport  || "—";
 document.getElementById("flightCost").textContent = flight.cost != null ? "$" + flight.cost : "";
-document.getElementById("date").textContent = flight.departure_date || "-";
-document.getElementById("time").textContent = flight.departure_time && flight.arrival_time ? `${flight.departure_time} → ${flight.arrival_time}` : "-";
+document.getElementById("airline").textContent   = flight.airline || "—";
+document.getElementById("date").textContent = flight.departure_date || "—";
+document.getElementById("time").textContent = flight.departure_time && flight.arrival_time ? `${formatTime(flight.departure_time)} → ${formatTime(flight.arrival_time)}` : "—";
 
 // Seat mappings
 const ROWS = 20;
