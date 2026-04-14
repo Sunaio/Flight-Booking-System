@@ -34,6 +34,9 @@ function isTaken(row, col) {
 }
 
 let selectedSeat = null;
+const baseCost = flight.cost;
+let seatFee = 0;
+let costMult = 1;
 
 function buildSeatGrid(cabin) {
     const grid = document.getElementById("seatGrid");
@@ -79,26 +82,30 @@ function buildSeatGrid(cabin) {
     }
 }
 
+function updateCost() {
+    const totalCost = (baseCost * costMult) + seatFee;
+    document.getElementById("flightCost").textContent = "$" + totalCost;
+}
+
 function selectSeat(el, seatId) {
     document.querySelectorAll(".seat.selected").forEach(s => s.classList.remove("selected"));
     el.classList.add("selected");
     selectedSeat = seatId;
     document.getElementById("selectedSeatDisplay").textContent = seatId;
-    let extraFee = 0;
     let cabin = document.querySelector(".tab.active").dataset.class;
+    seatFee = 0;
     // Economy base - Free, Window +$25
     // Business +$400 fee, All seats free
     // First class +$600 fee, All seats free
-    if(cabin === "economy" && (seatId.endsWith("A") || seatId.endsWith("F"))) {
-        extraFee = 25; // Economy window seat fee
-    }else if(cabin === "business") {
-        extraFee = 400; // Business class fee
-    }else if(cabin === "first") {
-        extraFee = 600; // First class fee
+    if (cabin === "economy") {
+        if (seatId.endsWith("A") || seatId.endsWith("F")) {
+            seatFee = 25;
+        }
     }
 
-    let totalCost = Number(flight.cost) + extraFee;
-    document.getElementById("flightCost").textContent = "$" + totalCost;
+    if (cabin === "business") seatFee = 400;
+    if (cabin === "first") seatFee = 600;
+    updateCost();
 }
 
 // Tab switching
@@ -107,6 +114,11 @@ document.querySelectorAll(".tab").forEach(tab => {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
         buildSeatGrid(tab.dataset.class);
+        // Reset seat selection and cost when switching cabins
+        selectedSeat = null;
+        seatFee = 0;
+        document.getElementById("selectedSeatDisplay").textContent = "None";
+        updateCost();
     });
 });
 
@@ -140,11 +152,6 @@ document.querySelector("#confirmPopup .submit-btn").addEventListener("click", ()
 });
 
 document.getElementById("type").addEventListener("change", (e) => {
-    const value = e.target.value;
-    const costElement = document.getElementById("flightCost");
-    if(value === "round") {
-        costElement.textContent = "$" + (flight.cost * 2);
-    } else {
-        costElement.textContent = "$" + flight.cost;
-    }
+    costMult = (e.target.value === "round") ? 2 : 1;
+    updateCost();
 });
