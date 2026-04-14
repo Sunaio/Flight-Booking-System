@@ -18,7 +18,16 @@ def get_connection():
     return pyodbc.connect(connection_str)
 
 @app.get("/flights")
-def get_flights(start: int = 1, end: int = 5):
+def get_flights(
+    start: int = 1,
+    end: int = 5,
+    dep_airport: str = None,
+    arr_airport: str = None,
+    departure_date: str = None,
+    min_cost: float = None,
+    max_cost: float = None,
+    airline_type: str = None
+):
     conn = get_connection()
     cursor = conn.cursor()
     offset = start - 1
@@ -39,11 +48,37 @@ def get_flights(start: int = 1, end: int = 5):
         CAST(time_arr AS VARCHAR(255)) AS arrival_time,
         CAST(cost AS VARCHAR(255)) AS cost
     FROM flights.flight_data
+    WHERE 1=1
+    """
+    params = []
+
+    # Filters
+    if dep_airport:
+        query += " AND dep_airport_iata = ?"
+        params.append(dep_airport)
+    if arr_airport:
+        query += " AND arr_airport_iata = ?"
+        params.append(arr_airport)
+    if departure_date:
+        query += " AND date = ?"
+        params.append(departure_date)
+    if min_cost is not None:
+        query += " AND cost >= ?"
+        params.append(min_cost)
+    if max_cost is not None:
+        query += " AND cost <= ?"
+        params.append(max_cost)
+    if airline_type:
+        query += " AND type = ?"
+        params.append(airline_type)
+
+    query += """
     ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
+    params.extend([offset, limit])
 
-    cursor.execute(query, (offset, limit))
+    cursor.execute(query, params)
     columns = [col[0] for col in cursor.description]
     rows = cursor.fetchall()
     data = [dict(zip(columns, row)) for row in rows]
