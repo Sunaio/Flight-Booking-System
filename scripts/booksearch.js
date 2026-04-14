@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Filter Dropdown
+const toggleBtn = document.getElementById("filterToggle");
+const filterMenu = document.getElementById("filterMenu");
+
+toggleBtn.addEventListener("click", () => {
+    filterMenu.classList.toggle("active");
+});
+
 document.getElementById("prevPage").addEventListener("click", () => {
     if (start > 1) {
         start = Math.max(1, start - pageSize);
