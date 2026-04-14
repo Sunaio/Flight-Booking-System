@@ -110,7 +110,7 @@ def get_flight_filters(
         query += " AND cost <= ?"
         params.append(max_cost)
     if airline_type:
-        query += " AND type = ?"
+        query += " AND owner = ?"
         params.append(airline_type)
 
     query += """
