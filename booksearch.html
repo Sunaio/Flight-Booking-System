@@ -33,6 +33,45 @@
         </div>
     </section>
 
+    <!--Filter Section-->
+    <section class="filter-section">
+        <div class="filter-container">
+            <div class="filter-header">
+                <button id="filterToggle" class="filter-toggle-btn">
+                    Filters
+                </button>
+            </div>
+            <div class="filter-content">
+                <div id="filterMenu" class="filter-menu">
+                    <form id="filter-form" class="filter-form">
+                        <!-- Price -->
+                        <div class="filter-group">
+                            <label for="minPrice">Min Price</label>
+                            <input type="number" id="minPrice" placeholder="$429">
+                        </div>
+                        <div class="filter-group">
+                            <label for="maxPrice">Max Price</label>
+                            <input type="number" id="maxPrice" placeholder="$4829">
+                        </div>
+                        <!-- Airline -->
+                        <div class="filter-group">
+                            <label for="airline">Airline</label>
+                            <select id="airline">
+                                <option value="">Any</option>
+                                <option value="AirlineA">American Airlines</option>
+                                <option value="AirlineB">Delta Airlines</option>
+                                <option value="AirlineC">Frontier Airlines</option>
+                                <option value="AirlineD">Spirit Airlines</option>
+                                <option value="AirlineE">United Airlines</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="filter-btn">Apply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Results Section -->
     <section class="results-section">
         <div class="results-container">
