@@ -45,9 +45,82 @@ document.getElementById("search-form").addEventListener("submit", (e) => {
     loadFlights();
 });
 
+// Getting search and filter parameters
+function getSearchParams() {
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+    const departureUnformat = document.getElementById("departure").value;
+    let departureDate = "";
+
+    if(departureUnformat) {
+        //Convert to YYYY-MM-DD format
+        const depDateObj = new Date(departureUnformat);
+        departureDate = depDateObj.toISOString().split('T')[0];
+    }
+    return { from, to, departureDate };
+}
+
+function getFilterParams() {
+    const filters = {};
+    const filterInputs = document.querySelectorAll(".filter-input");
+    filterInputs.forEach(input => {
+        if (input.value) {
+            filters[input.name] = input.value.trim();
+        }
+    });
+    return filters;
+}
+
+// Filter and Search button handler
+document.getElementById("search-btn").addEventListener("click", () => {
+    e.preventDefault();
+    start = 1;
+    end = pageSize;
+    loadFlights();
+});
+
+document.getElementById("filter-btn").addEventListener("click", () => {
+    e.preventDefault();
+    start = 1;
+    end = pageSize;
+    loadFlights();
+});
+
+// Endpoints
+function filter () {
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+    const departure = document.getElementById("departure").value;
+    const min_price = document.getElementById("min_price").value.trim();
+    const max_price = document.getElementById("max_price").value.trim();
+    const airline = document.getElementById("airline").value.trim();
+
+    return !!(from || to || departure || min_price || max_price || airline);
+}
+
+function get_endpoint() {
+    return filter()
+    ? "/flights/filters"
+    : "/flights";
+}
+
 async function loadFlights() {
     try {
-        const url = `https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights?start=${start}&end=${end}`;
+        const searchParams = getSearchParams();
+        const filterParams = getFilterParams();
+        const base = "https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net";
+        let url = `${base}${get_endpoint()}?start=${start}&end=${end}`;
+
+        // Search parameters
+        if(searchParams.from) url += `&dep_airport=${encodeURIComponent(searchParams.from)}`;
+        if(searchParams.to) url += `&arr_airport=${encodeURIComponent(searchParams.to)}`;
+        if(searchParams.departureDate) url += `&departure_date=${encodeURIComponent(searchParams.departureDate)}`;
+
+        // Filter parameters
+        if(filterParams.min_price) url += `&min_cost=${encodeURIComponent(filterParams.min_price)}`;
+        if(filterParams.max_price) url += `&max_cost=${encodeURIComponent(filterParams.max_price)}`;
+        if(filterParams.airline) url += `&airline_type=${encodeURIComponent(filterParams.airline)}`;
+
         const res = await fetch(url);
         if (!res.ok) {
             throw new Error(`HTTP error: ${res.status}`);

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import pyodbc
@@ -18,7 +18,48 @@ def get_connection():
     return pyodbc.connect(connection_str)
 
 @app.get("/flights")
-def get_flights(
+def get_flights(start: int = 1, end: int = 5):
+    conn = get_connection()
+    cursor = conn.cursor()
+    offset = start - 1
+    limit = end - start + 1
+
+    query = """
+    SELECT 
+        CAST(owner AS VARCHAR(255)) AS owner,
+        CAST(flight_number AS VARCHAR(255)) AS flight_number,
+        CAST(type AS VARCHAR(255)) AS plane_type,
+        CAST(type_icao AS VARCHAR(255)) AS plane_icao,
+        CAST(dep_airport_iata AS VARCHAR(255)) AS dep_airport,
+        CAST(arr_airport_iata AS VARCHAR(255)) AS arr_airport,
+        CAST(dep_airport AS VARCHAR(255)) AS dep_airport_name,
+        CAST(arr_airport AS VARCHAR(255)) AS arr_airport_name,
+        CAST(date AS VARCHAR(255)) AS departure_date,
+        CAST(time AS VARCHAR(255)) AS departure_time,
+        CAST(time_arr AS VARCHAR(255)) AS arrival_time,
+        CAST(cost AS VARCHAR(255)) AS cost
+    FROM flights.flight_data
+    ORDER BY (SELECT NULL)
+    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+    """
+
+    cursor.execute(query, (offset, limit))
+    columns = [col[0] for col in cursor.description]
+    rows = cursor.fetchall()
+    data = [dict(zip(columns, row)) for row in rows]
+    conn.close()
+    return {
+        "data": data,
+        "pagination": {
+            "start": start,
+            "end": end,
+            "page_size": limit,
+            "page": ((start - 1) // limit) + 1
+        }
+    }
+
+@app.get("/flight/filters")
+def get_flight_filters(
     start: int = 1,
     end: int = 5,
     dep_airport: str = None,
@@ -63,10 +104,10 @@ def get_flights(
         query += " AND date = ?"
         params.append(departure_date)
     if min_cost is not None:
-        query += " AND cost >= ?"
+        query += " AND CAST(cost AS FLOAT) >= ?"
         params.append(min_cost)
     if max_cost is not None:
-        query += " AND cost <= ?"
+        query += " AND CAST(cost AS FLOAT) <= ?"
         params.append(max_cost)
     if airline_type:
         query += " AND type = ?"
