@@ -8,7 +8,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -34,10 +34,10 @@ def get_flights(start: int = 1, end: int = 5):
         CAST(arr_airport_iata AS VARCHAR(255)) AS arr_airport,
         CAST(dep_airport AS VARCHAR(255)) AS dep_airport_name,
         CAST(arr_airport AS VARCHAR(255)) AS arr_airport_name,
-        CAST(date AS VARCHAR(255)) AS departure_date,
-        CAST(time AS VARCHAR(255)) AS departure_time,
-        CAST(time_arr AS VARCHAR(255)) AS arrival_time,
-        CAST(cost AS VARCHAR(255)) AS cost
+        CAST(date AS DATE) AS departure_date,
+        CAST(time AS TIME) AS departure_time,
+        CAST(time_arr AS TIME) AS arrival_time,
+        CAST(cost AS INTEGER) AS cost
     FROM flights.flight_data
     ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
@@ -84,10 +84,10 @@ def get_flight_filters(
         CAST(arr_airport_iata AS VARCHAR(255)) AS arr_airport,
         CAST(dep_airport AS VARCHAR(255)) AS dep_airport_name,
         CAST(arr_airport AS VARCHAR(255)) AS arr_airport_name,
-        CAST(date AS VARCHAR(255)) AS departure_date,
-        CAST(time AS VARCHAR(255)) AS departure_time,
-        CAST(time_arr AS VARCHAR(255)) AS arrival_time,
-        CAST(cost AS VARCHAR(255)) AS cost
+        CAST(date AS DATE) AS departure_date,
+        CAST(time AS TIME) AS departure_time,
+        CAST(time_arr AS TIME) AS arrival_time,
+        CAST(cost AS INTEGER) AS cost
     FROM flights.flight_data
     WHERE 1=1
     """
@@ -104,10 +104,10 @@ def get_flight_filters(
         query += " AND date = ?"
         params.append(departure_date)
     if min_cost is not None:
-        query += " AND CAST(cost AS FLOAT) >= ?"
+        query += " AND cost >= ?"
         params.append(min_cost)
     if max_cost is not None:
-        query += " AND CAST(cost AS FLOAT) <= ?"
+        query += " AND cost <= ?"
         params.append(max_cost)
     if airline_type:
         query += " AND type = ?"

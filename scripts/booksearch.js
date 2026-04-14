@@ -72,14 +72,14 @@ function getFilterParams() {
 }
 
 // Filter and Search button handler
-document.getElementById("search-btn").addEventListener("click", () => {
+document.getElementsByClassName("search-btn")[0].addEventListener("click", (e) => {
     e.preventDefault();
     start = 1;
     end = pageSize;
     loadFlights();
 });
 
-document.getElementById("filter-btn").addEventListener("click", () => {
+document.getElementsByClassName("filter-btn")[0].addEventListener("click", (e) => {
     e.preventDefault();
     start = 1;
     end = pageSize;
@@ -91,8 +91,8 @@ function filter () {
     const from = document.getElementById("from").value.trim();
     const to = document.getElementById("to").value.trim();
     const departure = document.getElementById("departure").value;
-    const min_price = document.getElementById("min_price").value.trim();
-    const max_price = document.getElementById("max_price").value.trim();
+    const min_price = document.getElementById("minPrice").value.trim();
+    const max_price = document.getElementById("maxPrice").value.trim();
     const airline = document.getElementById("airline").value.trim();
 
     return !!(from || to || departure || min_price || max_price || airline);
@@ -100,7 +100,7 @@ function filter () {
 
 function get_endpoint() {
     return filter()
-    ? "/flights/filters"
+    ? "/flight/filters"
     : "/flights";
 }
 
@@ -110,7 +110,6 @@ async function loadFlights() {
         const filterParams = getFilterParams();
         const base = "https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net";
         let url = `${base}${get_endpoint()}?start=${start}&end=${end}`;
-
         // Search parameters
         if(searchParams.from) url += `&dep_airport=${encodeURIComponent(searchParams.from)}`;
         if(searchParams.to) url += `&arr_airport=${encodeURIComponent(searchParams.to)}`;
