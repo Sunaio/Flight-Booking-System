@@ -339,6 +339,32 @@
     line-height: 1.6; 
 }
 
+/* Others section */
+.flight-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.flight-options label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+}
+
+.flight-options select {
+    padding: 9px 11px;
+    border-radius: 8px;
+    border: 0.5px solid rgba(0,0,0,0.18);
+    background: #fff;
+    font-size: 14px;
+    color: #1a1a18;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
 /* Res */
 @media (max-width: 500px) {
     .form-row { grid-template-columns: 1fr; }

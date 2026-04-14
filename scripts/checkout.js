@@ -138,3 +138,13 @@ document.querySelector("#confirmPopup .submit-btn").addEventListener("click", ()
     document.getElementById("confirmPopup").hidden = true;
     document.getElementById("bookingConfirmPopup").hidden = false;
 });
+
+document.getElementById("type").addEventListener("change", (e) => {
+    const value = e.target.value;
+    const costElement = document.getElementById("flightCost");
+    if(value === "round") {
+        costElement.textContent = "$" + (flight.cost * 2);
+    } else {
+        costElement.textContent = "$" + flight.cost;
+    }
+});

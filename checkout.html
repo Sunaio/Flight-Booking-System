@@ -27,6 +27,23 @@
             </div>
         </div>
 
+        <!-- Passenger Details -->
+        <div class="card">
+            <p class="card-label">Passenger details</p>
+            <form id="bookingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First name</label>
+                        <input type="text" id="firstName" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last name</label>
+                        <input type="text" id="lastName" placeholder="Last Name" required>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <!-- Seat Selection -->
         <div class="card">
             <p class="card-label">Select a seat</p>
@@ -49,29 +66,23 @@
                 <span class="legend-item"><span class="legend-dot taken"></span>Taken</span>
                 <span class="legend-item"><span class="legend-dot selected"></span>Selected</span>
             </div>
-            <p class="selected-seat-label">Selected seat: <strong id="selectedSeatDisplay">None</strong></p>
+            <p class="selected-seat-label">Selected seat: <strong id="selectedSeatDisplay">None</strong></p><br>
         </div>
 
-        <!-- Passenger Details -->
-        <div class="card">
-            <p class="card-label">Passenger details</p>
-            <form id="bookingForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName">First name</label>
-                        <input type="text" id="firstName" placeholder="First Name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last name</label>
-                        <input type="text" id="lastName" placeholder="Last Name" required>
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn">Confirm booking</button>
-                <button type="button" class="cancel-btn" onclick="window.location.href='booksearch.html'">Cancel Booking</button>
-            </form>
+    <!--Others-->
+    <div class="card">
+        <p class="card-label">Others</p>
+        <div class="flight-options">
+            <label for="type">Flight Type</label>
+                <select id="type">
+                    <option value="one">One-Way</option>
+                    <option value="round">Round-Trip</option>
+                </select>
         </div>
-
-    </main>
+        <br>
+        <button type="submit" class="submit-btn">Confirm booking</button>
+        <button type="button" class="cancel-btn" onclick="window.location.href='booksearch.html'">Cancel Booking</button>
+    </div>
 
     <!-- Confirmation Popup -->
     <div id="confirmPopup" class="popup-overlay" hidden>
@@ -82,6 +93,7 @@
             <button class="cancel-btn" onclick="document.getElementById('confirmPopup').hidden = true">Cancel</button>
         </div>
     </div>
+</main>
 
     <!-- Booking Confirmation -->
      <div id="bookingConfirmPopup" class="popup-overlay" hidden>
