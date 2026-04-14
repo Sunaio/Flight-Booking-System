@@ -196,6 +196,7 @@ function renderFlights(flights) {
             id: flight.flight_number,
             dep_airport: flight.dep_airport,
             arr_airport: flight.arr_airport,
+            airline: flight.owner,
             departure_date: flight.departure_date,
             departure_time: flight.departure_time,
             arrival_time: flight.arrival_time,
