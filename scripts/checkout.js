@@ -20,7 +20,7 @@ function formatTime(timeStr) {
 document.getElementById("depAirport").textContent  = flight.dep_airport  || "—";
 document.getElementById("arrAirport").textContent  = flight.arr_airport  || "—";
 document.getElementById("flightCost").textContent = flight.cost != null ? "$" + flight.cost : "";
-document.getElementById("airline").textContent   = flight.airline || "—";
+document.getElementById("airline").textContent   = flight.owner || "—";
 document.getElementById("date").textContent = flight.departure_date || "—";
 document.getElementById("time").textContent = flight.departure_time && flight.arrival_time ? `${formatTime(flight.departure_time)} → ${formatTime(flight.arrival_time)}` : "—";
 
