@@ -42,6 +42,20 @@
     font-size: 1rem;
 }
 
+.search-input-date {
+    display: flex;
+    justify-content: center;
+}
+
+.search-input-date input {
+    padding: 0.9rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    max-width: 400px;
+    width: 100%;
+}
+
 /* Results */
 .results-section {
     padding: 2rem;
