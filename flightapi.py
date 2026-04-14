@@ -26,18 +26,18 @@ def get_flights(start: int = 1, end: int = 5):
 
     query = """
     SELECT 
-        CAST(owner AS VARCHAR(255)) AS owner,
-        CAST(flight_number AS VARCHAR(255)) AS flight_number,
-        CAST(type AS VARCHAR(255)) AS plane_type,
-        CAST(type_icao AS VARCHAR(255)) AS plane_icao,
-        CAST(dep_airport_iata AS VARCHAR(255)) AS dep_airport,
-        CAST(arr_airport_iata AS VARCHAR(255)) AS arr_airport,
-        CAST(dep_airport AS VARCHAR(255)) AS dep_airport_name,
-        CAST(arr_airport AS VARCHAR(255)) AS arr_airport_name,
-        CAST(date AS DATE) AS departure_date,
-        CAST(time AS TIME) AS departure_time,
-        CAST(time_arr AS TIME) AS arrival_time,
-        CAST(cost AS INTEGER) AS cost
+        owner AS owner,
+        flight_number AS flight_number,
+        type AS plane_type,
+        type_icao AS plane_icao,
+        dep_airport_iata AS dep_airport,
+        arr_airport_iata AS arr_airport,
+        dep_airport AS dep_airport_name,
+        arr_airport AS arr_airport_name,
+        date AS departure_date,
+        time AS departure_time,
+        time_arr AS arrival_time,
+        cost AS cost
     FROM flights.flight_data
     ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
@@ -76,18 +76,18 @@ def get_flight_filters(
 
     query = """
     SELECT 
-        CAST(owner AS VARCHAR(255)) AS owner,
-        CAST(flight_number AS VARCHAR(255)) AS flight_number,
-        CAST(type AS VARCHAR(255)) AS plane_type,
-        CAST(type_icao AS VARCHAR(255)) AS plane_icao,
-        CAST(dep_airport_iata AS VARCHAR(255)) AS dep_airport,
-        CAST(arr_airport_iata AS VARCHAR(255)) AS arr_airport,
-        CAST(dep_airport AS VARCHAR(255)) AS dep_airport_name,
-        CAST(arr_airport AS VARCHAR(255)) AS arr_airport_name,
-        CAST(date AS DATE) AS departure_date,
-        CAST(time AS TIME) AS departure_time,
-        CAST(time_arr AS TIME) AS arrival_time,
-        CAST(cost AS INTEGER) AS cost
+        owner AS owner,
+        flight_number AS flight_number,
+        type AS plane_type,
+        type_icao AS plane_icao,
+        dep_airport_iata AS dep_airport,
+        arr_airport_iata AS arr_airport,
+        dep_airport AS dep_airport_name,
+        arr_airport AS arr_airport_name,
+        date AS departure_date,
+        time AS departure_time,
+        time_arr AS arrival_time,
+        cost AS cost
     FROM flights.flight_data
     WHERE 1=1
     """

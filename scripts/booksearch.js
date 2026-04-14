@@ -5,6 +5,16 @@ const pageSize = 5;
 const resultsDiv = document.getElementById("flightResults");
 const pageInfo = document.getElementById("pageInfo");
 
+// 12-hour Time formatting
+function formatTime(timeStr) {
+    if (!timeStr) return "Unknown Time";
+    const [hour, minute] = timeStr.split(":");
+    let hours = parseInt(hour);
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    return `${hours}:${minute} ${ampm}`;
+}
+
 // Fly Home Click Handler
 document.addEventListener('DOMContentLoaded', function() {
     const logo = document.querySelector('.logo');
@@ -167,7 +177,9 @@ function renderFlights(flights) {
                 <div class="date">
                     <span>${flight.departure_date || "Unknown Date"}</span>
                 </div>
-                <div class="times">${flight.departure_time || "Unknown Departure Time"} → ${flight.arrival_time || "Unknown Arrival Time"}</div>
+                <div class="times">
+                    <span>${formatTime(flight.departure_time)} → ${formatTime(flight.arrival_time)}</span>
+                </div>
             </div>
             <div class="flight-right">
                 <span class="price">${flight.cost != null ? "$" + flight.cost : "N/A"}</span>
