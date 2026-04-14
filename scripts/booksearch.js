@@ -5,6 +5,17 @@ const pageSize = 5;
 const resultsDiv = document.getElementById("flightResults");
 const pageInfo = document.getElementById("pageInfo");
 
+// Fly Home Click Handler
+document.addEventListener('DOMContentLoaded', function() {
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'index.html'; // Redirect to homepage
+        });
+    }
+});
+
 document.getElementById("prevPage").addEventListener("click", () => {
     if (start > 1) {
         start = Math.max(1, start - pageSize);
