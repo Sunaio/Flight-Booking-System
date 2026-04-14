@@ -67,18 +67,22 @@ function getSearchParams() {
         const depDateObj = new Date(departureUnformat);
         departureDate = depDateObj.toISOString().split('T')[0];
     }
-    return { from, to, departureDate };
+    return {
+        dep_airport: from || null,
+        arr_airport: to || null,
+        dep_time: departureDate || null
+    };
 }
 
 function getFilterParams() {
-    const filters = {};
-    const filterInputs = document.querySelectorAll(".filter-input");
-    filterInputs.forEach(input => {
-        if (input.value) {
-            filters[input.name] = input.value.trim();
-        }
-    });
-    return filters;
+    const min_price = document.getElementById("minPrice").value.trim();
+    const max_price = document.getElementById("maxPrice").value.trim();
+    const airline = document.getElementById("airline").value;
+    return {
+        min_price: min_price || null,
+        max_price: max_price || null,
+        airline: airline || null
+    };
 }
 
 // Filter and Search button handler
@@ -121,9 +125,9 @@ async function loadFlights() {
         const base = "https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net";
         let url = `${base}${get_endpoint()}?start=${start}&end=${end}`;
         // Search parameters
-        if(searchParams.from) url += `&dep_airport=${encodeURIComponent(searchParams.from)}`;
-        if(searchParams.to) url += `&arr_airport=${encodeURIComponent(searchParams.to)}`;
-        if(searchParams.departureDate) url += `&departure_date=${encodeURIComponent(searchParams.departureDate)}`;
+        if(searchParams.dep_airport) url += `&dep_airport=${encodeURIComponent(searchParams.dep_airport)}`;
+        if(searchParams.arr_airport) url += `&arr_airport=${encodeURIComponent(searchParams.arr_airport)}`;
+        if(searchParams.dep_time) url += `&departure_date=${encodeURIComponent(searchParams.dep_time)}`;
 
         // Filter parameters
         if(filterParams.min_price) url += `&min_cost=${encodeURIComponent(filterParams.min_price)}`;
