@@ -124,7 +124,7 @@ document.querySelectorAll(".tab").forEach(tab => {
 
 buildSeatGrid("economy");
 
-document.getElementById("bookingForm").addEventListener("submit", (e) => {
+document.getElementById("confirmButton").addEventListener("click", (e) => {
     e.preventDefault();
 
     if (!selectedSeat) {
@@ -134,14 +134,19 @@ document.getElementById("bookingForm").addEventListener("submit", (e) => {
 
     const firstName = document.getElementById("firstName").value.trim();
     const lastName  = document.getElementById("lastName").value.trim();
+    if (!firstName || !lastName) {
+        alert("Please enter both first and last names.");
+        return;
+    }
 
     // Build confirmation message
     const route = `${flight.dep_airport || "?"} → ${flight.arr_airport || "?"}`;
     document.getElementById("confirmSummary").innerHTML =
-        `${lastName}, ${firstName} <br>
+        `Name: ${firstName} ${lastName} <br>
         ${route} <br>
         Seat: ${selectedSeat} <br>
-        Cost: ${document.getElementById("flightCost").textContent}`;
+        Cost: ${document.getElementById("flightCost").textContent} <br>
+        Type: ${document.getElementById("type").value === "round" ? "Round-Trip" : "One-Way"}`;
 
     document.getElementById("confirmPopup").hidden = false;
 });
