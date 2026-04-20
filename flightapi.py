@@ -151,7 +151,7 @@ def get_seat_summary(flight_id: int):
     GROUP BY flight_id
     """
     cursor.execute(query, (flight_id,))
-    rows = cursor.fetchall()
+    rows = cursor.fetchone()
     conn.close()
     if not rows:
         return {
