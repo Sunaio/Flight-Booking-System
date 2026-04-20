@@ -153,18 +153,18 @@ def get_seat_summary(flight_id: int):
     cursor.execute(query, (flight_id,))
     rows = cursor.fetchall()
     conn.close()
-    if rows:
+    if not rows:
         return {
-            "flight_id": rows[0],
-            "total_seats": rows[1],
-            "booked_seats": rows[2],
-            "unbooked_seats": rows[3]
+            "flight_id": flight_id,
+            "total_seats": 0,
+            "booked_seats": 0,
+            "unbooked_seats": 0
         }
     return {
         "flight_id": flight_id,
-        "total_seats": 0,
-        "booked_seats": 0,
-        "unbooked_seats": 0
+        "total_seats": rows[0],
+        "booked_seats": rows[1],
+        "unbooked_seats": rows[2]
     }
 
 @app.get("/flights/{flight_id}/seats")
