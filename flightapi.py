@@ -144,8 +144,8 @@ def get_seat_summary(flight_id: int):
     SELECT 
         flight_id,
         COUNT(*) AS total_seats,
-        SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS booked_seats,
-        SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) AS unbooked_seats
+        SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS unbooked_seats,
+        SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) AS booked_seats
     FROM flights.seats
     WHERE flight_id = ?
     GROUP BY flight_id
