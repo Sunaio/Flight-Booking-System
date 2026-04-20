@@ -76,8 +76,9 @@ def get_flight_filters(
 
     query = """
     SELECT 
-        owner AS owner,
-        flight_number AS flight_number,
+        owner,
+        flight_id,
+        flight_number ,
         type AS plane_type,
         type_icao AS plane_icao,
         dep_airport_iata AS dep_airport,
@@ -87,7 +88,7 @@ def get_flight_filters(
         date AS departure_date,
         time AS departure_time,
         time_arr AS arrival_time,
-        cost AS cost
+        cost
     FROM flights.flight_data
     WHERE 1=1
     """
@@ -132,6 +133,64 @@ def get_flight_filters(
             "page_size": limit,
             "page": ((start - 1) // limit) + 1
         }
+    }
+
+@app.get("/flights/{flight_id}/seats/summary")
+def get_seat_summary(flight_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    query = """
+    SELECT 
+        flight_id,
+        COUNT(*) AS total_seats,
+        SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS booked_seats,
+        SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) AS unbooked_seats
+    FROM flights.seats
+    WHERE flight_id = ?
+    GROUP BY flight_id
+    """
+    cursor.execute(query, (flight_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    if rows:
+        return {
+            "flight_id": rows[0],
+            "total_seats": rows[1],
+            "booked_seats": rows[2],
+            "unbooked_seats": rows[3]
+        }
+    return {
+        "flight_id": flight_id,
+        "total_seats": 0,
+        "booked_seats": 0,
+        "unbooked_seats": 0
+    }
+
+@app.get("/flights/{flight_id}/seats")
+def get_seats(flight_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    query = """
+    SELECT 
+        seat_number,
+        is_available
+    FROM flights.seats
+    WHERE flight_id = ?
+    ORDER BY seat_number
+    """
+    cursor.execute(query, (flight_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    return {
+        "flight_id": flight_id,
+        "seats": [
+            {
+                "seat_number": row[0],
+                "is_available": bool(row[1])
+            } for row in rows
+        ]
     }
 
 @app.get("/db-test")
