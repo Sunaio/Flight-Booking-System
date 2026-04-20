@@ -144,8 +144,8 @@ def get_seat_summary(flight_id: int):
     SELECT 
         flight_id,
         COUNT(*) AS total_seats,
-        SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS booked_seats,
-        SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) AS unbooked_seats
+        SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS unbooked_seats,
+        SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) AS booked_seats
     FROM flights.seats
     WHERE flight_id = ?
     GROUP BY flight_id
@@ -157,14 +157,14 @@ def get_seat_summary(flight_id: int):
         return {
             "flight_id": flight_id,
             "total_seats": 0,
-            "booked_seats": 0,
-            "unbooked_seats": 0
+            "unbooked_seats": 0,
+            "booked_seats": 0
         }
     return {
-        "flight_id": flight_id,
-        "total_seats": rows[0],
-        "booked_seats": rows[1],
-        "unbooked_seats": rows[2]
+        "flight_id": rows[0],
+        "total_seats": rows[1],
+        "unbooked_seats": rows[2],
+        "booked_seats": rows[3]
     }
 
 @app.get("/flights/{flight_id}/seats")
