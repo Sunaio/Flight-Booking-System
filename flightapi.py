@@ -161,10 +161,10 @@ def get_seat_summary(flight_id: int):
             "unbooked_seats": 0
         }
     return {
-        "flight_id": flight_id,
-        "total_seats": rows[0],
-        "booked_seats": rows[1],
-        "unbooked_seats": rows[2]
+        "flight_id": rows[0],
+        "total_seats": rows[1],
+        "unbooked_seats": rows[2],
+        "booked_seats": rows[3]
     }
 
 @app.get("/flights/{flight_id}/seats")
