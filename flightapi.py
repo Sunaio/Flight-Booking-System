@@ -157,8 +157,8 @@ def get_seat_summary(flight_id: int):
         return {
             "flight_id": flight_id,
             "total_seats": 0,
-            "booked_seats": 0,
-            "unbooked_seats": 0
+            "unbooked_seats": 0,
+            "booked_seats": 0
         }
     return {
         "flight_id": rows[0],
