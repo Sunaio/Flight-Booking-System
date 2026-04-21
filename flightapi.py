@@ -194,6 +194,38 @@ def get_seats(flight_id: int):
         ]
     }
 
+@app.post("/flights/book")
+def book_seat(flight_id: int, seat_number: str):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Check if seat is available
+    cursor.execute(
+    """
+    SELECT is_available FROM flights.seats
+    WHERE flight_id = ? AND seat_number = ?
+    """, (flight_id, seat_number))
+
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        return {"status": "FAILED", "error": "Seat not found"}
+    if row[0] == 0:
+        conn.close()
+        return {"status": "FAILED", "error": "Seat already booked"}
+
+    # Book the seat
+    cursor.execute(
+    """
+    UPDATE flights.seats
+    SET is_available = 0
+    WHERE flight_id = ? AND seat_number = ?
+    """, (flight_id, seat_number))
+    
+    conn.commit()
+    conn.close()
+    return {"status": "SUCCESS", "message": f"Seat {seat_number} on flight {flight_id} booked successfully"}
+
 @app.get("/db-test")
 def db_test():
     try:
