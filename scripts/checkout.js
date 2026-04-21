@@ -172,9 +172,26 @@ document.getElementById("confirmButton").addEventListener("click", (e) => {
     document.getElementById("confirmPopup").hidden = false;
 });
 
-document.querySelector("#confirmPopup .submit-btn").addEventListener("click", () => {
+document.querySelector("#confirmPopup .submit-btn").addEventListener("click", async () => {
+    try {
+        const response = await fetch("https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights/book", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                flight_id: flight.id,
+                seat_number: selectedSeat,
+            })
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Booking failed");
+        }
     document.getElementById("confirmPopup").hidden = true;
     document.getElementById("bookingConfirmPopup").hidden = false;
+    } catch (err) {
+        console.error("Booking error:", err);
+        alert("Failed to book the flight: " + err.message);
+    }
 });
 
 document.getElementById("type").addEventListener("change", (e) => {
