@@ -4,17 +4,28 @@ library(lubridate)
 #Import dataset
 flight_data <- read_csv("flights_db.csv")
 
-# Airline List
-airlines <- c(
-  "Delta Airline", "American Airline", "United Airline", "Spirit Airline", "Frontier Airlines"
-)
-
 # Filtering out data (empty and non commercial)
 flight_data_clean <- flight_data %>%
+  mutate(
+    owner = str_to_lower(owner),
+    owner = str_squish(owner),
+    owner = case_when(
+      str_detect(owner, "delta") ~ "delta airlines",
+      str_detect(owner, "american") ~ "american airlines",
+      str_detect(owner, "united") ~ "united airlines",
+      str_detect(owner, "spirit") ~ "spirit airlines",
+      str_detect(owner, "southwest") ~ "southwest airlines",
+      TRUE ~ owner
+    )
+  ) %>%
   filter(
-    str_detect(tolower(owner), paste(tolower(airlines), collapse = "|")),
-    !str_detect(tolower(owner), "\\("),
-    !str_detect(tolower(owner), "cargo"),
+    owner %in% c(
+      "delta airlines",
+      "american airlines",
+      "united airlines",
+      "spirit airlines",
+      "southwest airlines"
+    ),
     distance != 0
   )
 
@@ -95,11 +106,11 @@ international_multiplier <- function(dep, arr) {
 
 airline_multiplier <- function(owner) {
   case_when(
-    owner == "Delta Airline" ~ 1.15,
-    owner == "United Airline" ~ 1.12,
-    owner == "American Airline" ~ 1.10,
-    owner == "Spirit Airline" ~ 0.75,
-    owner == "Frontier Airlines" ~ 0.70,
+    owner == "delta airlines" ~ 1.00,
+    owner == "united airlines" ~ 0.98,
+    owner == "american airlines" ~ 0.99,
+    owner == "spirit airlines" ~ 0.75,
+    owner == "southwest airlines" ~ 0.70,
     TRUE ~ 1.0
   )
 }
@@ -130,8 +141,18 @@ flight_data_clean_final <- flight_data_clean_final %>%
     cost = round(cost_raw * multiplier + noise)
   )
 
-# Final columns removals
+# Final columns removals and formating
 flight_data_clean_final <- flight_data_clean_final %>%
+  mutate(
+    owner = case_when(
+      owner == "delta airlines" ~ "Delta Airlines",
+      owner == "american airlines" ~ "American Airlines",
+      owner == "united airlines" ~ "United Airlines",
+      owner == "spirit airlines" ~ "Spirit Airlines",
+      owner == "southwest airlines" ~ "Southwest Airlines",
+      TRUE ~ str_to_title(owner)
+    )
+  ) %>%
   select(-rough_flight_time, -distance, -noise, -multiplier, -cost_raw, -base_fee)
 
 # Output

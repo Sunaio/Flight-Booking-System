@@ -147,6 +147,7 @@ async function loadFlights() {
     }
 }
 
+<<<<<<< Updated upstream
 async function getSeats(flightId) {
     try {
         const res = await fetch(`https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights/${flightId}/seats/summary`);
@@ -164,6 +165,18 @@ async function getSeats(flightId) {
             booked_seats: 0
         };
     }
+=======
+function getAirlineLogo(airline) {
+    const logos = {
+        "United Airlines": "assets/unitedlogo.png",
+        "Delta Airines": "assets/Delta-Logo.png",
+        "American Airlines": "assets/americanlogo.jpg",
+        "Spirit Airlines": "assets/Spirit-Airlines-logo.png",
+        "Frontier Airlines": "assets/Emblem-Frontier-Airlines.jpg",
+    };
+
+    return logos[airline] || "assets/nothing.png";
+>>>>>>> Stashed changes
 }
 
 function renderFlights(flights) {
@@ -178,6 +191,7 @@ function renderFlights(flights) {
         card.innerHTML = `
             <div class="flight-left">
                 <div class="airline-sec">
+                    <img class="airline-logo" src="${getAirlineLogo(flight.owner)}" alt="${flight.owner || "Airline Logo"}">
                     <span class="airline-name">${flight.owner || "Unknown Airline"}</span>
                 </div>
                 <div class="flight-num">

@@ -254,3 +254,15 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.airline-sec {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.airline-logo {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
