@@ -147,6 +147,25 @@ async function loadFlights() {
     }
 }
 
+async function getSeats(flightId) {
+    try {
+        const res = await fetch(`https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights/${flightId}/seats/summary`);
+        if (!res.ok) {
+            throw new Error(`HTTP error: ${res.status}`);
+        }
+        const data = await res.json();
+        return data;
+    } catch (err) {
+        console.error("Failed to load seat information:", err);
+        return {
+            flight_id: flightId,
+            total_seats: 0,
+            unbooked_seats: 0,
+            booked_seats: 0
+        };
+    }
+}
+
 function getAirlineLogo(airline) {
     const logos = {
         "United Airlines": "assets/unitedlogo.png",
