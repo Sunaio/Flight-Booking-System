@@ -172,7 +172,7 @@ function getAirlineLogo(airline) {
         "Delta Airlines": "assets/Delta-Logo.png",
         "American Airlines": "assets/americanlogo.jpg",
         "Spirit Airlines": "assets/Spirit-Airlines-logo.png",
-        "Southwest Airlines": "assets/Emblem-Frontier-Airlines.jpg",
+        "Southwest Airlines": "assets/southwestlogo.png",
     };
 
     return logos[airline] || "assets/nothing.png";
