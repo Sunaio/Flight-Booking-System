@@ -147,6 +147,25 @@ async function loadFlights() {
     }
 }
 
+async function getSeats(flightId) {
+    try {
+        const res = await fetch(`https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights/${flightId}/seats/summary`);
+        if (!res.ok) {
+            throw new Error(`HTTP error: ${res.status}`);
+        }
+        const data = await res.json();
+        return data;
+    } catch (err) {
+        console.error("Failed to load seat information:", err);
+        return {
+            flight_id: flightId,
+            total_seats: 0,
+            unbooked_seats: 0,
+            booked_seats: 0
+        };
+    }
+}
+
 function renderFlights(flights) {
     resultsDiv.innerHTML = "";
     if (!flights || flights.length === 0) {
@@ -178,6 +197,9 @@ function renderFlights(flights) {
                     <span class="route-arrow">→</span>
                     <span>${flight.arr_airport_name || "Unknown Arrival Airport Name"}</span>
                 </div>
+                <div class="seats">
+                    <span> Loading seats... </span>
+                </div>
                 <div class="date">
                     <span>${flight.departure_date || "Unknown Date"}</span>
                 </div>
@@ -193,7 +215,8 @@ function renderFlights(flights) {
         
         const bookBtn = card.querySelector(".book-btn");
         const flightData = {
-            id: flight.flight_number,
+            id: flight.flight_id,
+            number: flight.flight_number,
             dep_airport: flight.dep_airport,
             arr_airport: flight.arr_airport,
             airline: flight.owner,
@@ -206,6 +229,14 @@ function renderFlights(flights) {
         bookBtn.addEventListener("click", () => {
         const flightsParam = encodeURIComponent(JSON.stringify(flightData));
         window.location.href = `checkout.html?flight=${flightsParam}`;
+        });
+
+        const seatsDiv = card.querySelector(".seats");
+        getSeats(flight.flight_id).then(seatInfo => {
+            const seatText = `👤 ${seatInfo.unbooked_seats}/ ${seatInfo.total_seats}`;
+            seatsDiv.textContent = seatText;
+        }).catch(() => {
+            seatsDiv.textContent = "Seats: Unknown";
         });
 
         resultsDiv.appendChild(card);
