@@ -233,7 +233,7 @@ function renderFlights(flights) {
 
         const seatsDiv = card.querySelector(".seats");
         getSeats(flight.flight_id).then(seatInfo => {
-            const seatText = `👤 ${seatInfo.unbooked_seats}/ ${seatInfo.total_seats}`;
+            const seatText = `👤 ${seatInfo.booked_seats}/${seatInfo.total_seats}`;
             seatsDiv.textContent = seatText;
         }).catch(() => {
             seatsDiv.textContent = "Seats: Unknown";
