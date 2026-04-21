@@ -6,6 +6,8 @@ try {
     console.error("Failed to parse flight data:", e);
 }
 
+let seatMap = {};
+
 // 12-hour Time formatting
 function formatTime(timeStr) {
     if (!timeStr) return "Unknown Time";
@@ -25,12 +27,20 @@ document.getElementById("date").textContent = flight.departure_date || "—";
 document.getElementById("time").textContent = flight.departure_time && flight.arrival_time ? `${formatTime(flight.departure_time)} → ${formatTime(flight.arrival_time)}` : "—";
 
 // Seat mappings
-const ROWS = 20;
+const ROWS = 21;
 const COLS = ["A", "B", "C", "D", "E", "F"];
 
-function isTaken(row, col) {
-    const seed = (row * 7 + COLS.indexOf(col) * 13) % 10;
-    return seed < 3; // ~30% seats taken
+async function loadSeats() {
+    try {
+        const response = await fetch(`https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights/${flight.id}/seats`);
+        const data = await response.json();
+        seatMap = {};
+        data.seats.forEach(seat => {
+            seatMap[seat.seat_number] = !seat.is_available;
+        });
+    } catch (err) {
+        console.error("Failed to load seat information:", err);
+    }
 }
 
 let selectedSeat = null;
@@ -64,7 +74,7 @@ function buildSeatGrid(cabin) {
             }
 
             const seatId = `${r}${col}`;
-            const taken  = isTaken(r, col);
+            const taken  = seatMap[seatId] === true;
 
             const seat = document.createElement("div");
             seat.className = "seat" + (taken ? " taken" : "");
@@ -122,7 +132,18 @@ document.querySelectorAll(".tab").forEach(tab => {
     });
 });
 
-buildSeatGrid("economy");
+async function renderSeats(cabin) {
+    const grid = document.getElementById("seatGrid");
+    grid.innerHTML = "<p><br>Fetching Seats...</p>";
+    await loadSeats();
+    buildSeatGrid(cabin);
+}
+
+async function init() {
+    await renderSeats("economy");
+}
+
+init();
 
 document.getElementById("confirmButton").addEventListener("click", (e) => {
     e.preventDefault();
