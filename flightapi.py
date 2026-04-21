@@ -27,6 +27,7 @@ def get_flights(start: int = 1, end: int = 5):
     query = """
     SELECT 
         owner AS owner,
+        flight_id AS flight_id,
         flight_number AS flight_number,
         type AS plane_type,
         type_icao AS plane_icao,
@@ -78,7 +79,7 @@ def get_flight_filters(
     SELECT 
         owner,
         flight_id,
-        flight_number ,
+        flight_number,
         type AS plane_type,
         type_icao AS plane_icao,
         dep_airport_iata AS dep_airport,
