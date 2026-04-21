@@ -195,7 +195,10 @@ def get_seats(flight_id: int):
     }
 
 @app.post("/flights/book")
-def book_seat(flight_id: int, seat_number: str):
+def book_seat(data: dict):
+    flight_id = data.get("flight_id")
+    seat_number = data.get("seat_number")
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -221,7 +224,7 @@ def book_seat(flight_id: int, seat_number: str):
     SET is_available = 0
     WHERE flight_id = ? AND seat_number = ?
     """, (flight_id, seat_number))
-    
+
     conn.commit()
     conn.close()
     return {"status": "SUCCESS", "message": f"Seat {seat_number} on flight {flight_id} booked successfully"}
