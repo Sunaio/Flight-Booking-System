@@ -365,6 +365,128 @@
     transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+/* Results CSS from booksearch with some modifications */
+.flight-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+/* Flight Card */
+.flight-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flight-card:hover {
+    border-color: #aaa;
+}
+
+.flight-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.airline-sec { 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+}
+
+.airline-name { 
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.route { 
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #666;
+}
+
+.route-arrow { 
+    font-size: 14px;
+    color: #aaa; 
+}
+
+.times { 
+    font-size: 16px;
+    color: #000000;
+}
+
+.flight-right { 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.price { 
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.book-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.book-btn:hover { 
+    background: #00b8d4;
+    transform: translateY(-2px);
+}
+
+/* Next/Prev Buttons */
+.pages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding: 1rem 0;
+}
+
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 0;
+    width: 120px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a1a;
+    background: #ffffff;
+    border: 0.5px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.page-btn:hover {
+    background: #00b8d4;
+    border-color: #999;
+    transform: translateY(-2px);
+}
+
+#pageInfo {
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    min-width: 60px;
+    text-align: center;
+}
+
 /* Res */
 @media (max-width: 500px) {
     .form-row { grid-template-columns: 1fr; }

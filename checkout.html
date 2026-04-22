@@ -80,6 +80,44 @@
                 </select>
         </div>
         <br>
+        <!-- Round Trip Flight Book -->
+        <div class="results-section" hidden>
+            <div class="results-container">
+                <h2>Available Flights</h2>
+                <div id="flightResults" class="flight-results"></div>
+                    <div class = "pages">
+                        <button id="prevPage" class="page-btn">⬅ Previous</button>
+                        <span id="pageInfo"></span>
+                        <button id="nextPage" class="page-btn">Next ➡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Round Trip Seat Selection -->
+        <div class="seat-section" hidden>
+            <p class="card-label">Select a seat</p>
+            <div class="class-tabs">
+                <button class="tab active" data-class="economy">Economy</button>
+                <button class="tab" data-class="business">Business</button>
+                <button class="tab" data-class="first">First</button>
+            </div>
+            <div class="seat-map">
+                <div class="seat-labels">
+                    <span></span>
+                    <span>A</span><span>B</span><span>C</span>
+                    <span class="aisle"></span>
+                    <span>D</span><span>E</span><span>F</span>
+                </div>
+                <div id="seatGrid" class="seat-grid"></div>
+            </div>
+            <div class="legend">
+                <span class="legend-item"><span class="legend-dot available"></span>Available</span>
+                <span class="legend-item"><span class="legend-dot taken"></span>Taken</span>
+                <span class="legend-item"><span class="legend-dot selected"></span>Selected</span>
+            </div>
+            <p class="selected-seat-label">Selected seat: <strong id="selectedSeatDisplay">None</strong></p><br>
+        </div>
+    <br>
         <button type="button" id="confirmButton" class="submit-btn">Confirm booking</button>
         <button type="button" class="cancel-btn" onclick="window.location.href='booksearch.html'">Cancel Booking</button>
     </div>
