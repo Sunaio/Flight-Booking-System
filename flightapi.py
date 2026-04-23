@@ -251,6 +251,29 @@ def book_seat(data: dict):
     finally:
         conn.close()
 
+@app.get("/airports")
+def get_airports():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT DISTINCT dep_airport, dep_airport_iata
+        FROM flights.flight_data
+        UNION
+        SELECT DISTINCT arr_airport AS name, arr_airport_iata AS iata
+        FROM flights.flight_data
+    """)
+    rows = cursor.fetchall()
+    result = [
+        {
+            "name": r[0],
+            "iata": r[1],
+            "display": f"{r[0]} - {r[1]}"
+        }
+        for r in rows
+    ]
+    return {"airports": result}
+
 @app.get("/db-test")
 def db_test():
     try:
