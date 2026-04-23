@@ -22,8 +22,14 @@
             <h1>Search Flights</h1>
             <form id="search-form" class="search-form">
                 <div class ="search-input-group">
-                    <input type="text" id="from" name="from" placeholder="From" required>
-                    <input type="text" id="to" name="to" placeholder="To" required>
+                    <div class="input-wrapper">
+                        <input type="text" id="from" name="from" placeholder="From" required>
+                        <div id="from-suggest" class="suggest"></div>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="to" name="to" placeholder="To" required>
+                        <div id="to-suggest" class="suggest"></div>
+                    </div>
                 </div>
                 <div class ="search-input-date">
                     <input type="date" id="departure" name="departure" required>

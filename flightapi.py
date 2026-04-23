@@ -97,11 +97,23 @@ def get_flight_filters(
 
     # Filters
     if dep_airport:
-        query += " AND dep_airport_iata = ?"
-        params.append(dep_airport)
+        dep_airport = dep_airport.strip().upper()
+        if len(dep_airport) >= 3 and dep_airport[:3].isalpha():
+            dep_iata = dep_airport[:3]
+            query += " AND dep_airport_iata = ?"
+            params.append(dep_iata)
+        else:
+            query += " AND dep_airport LIKE ?"
+            params.append(f"%{dep_airport}%")
     if arr_airport:
-        query += " AND arr_airport_iata = ?"
-        params.append(arr_airport)
+        arr_airport = arr_airport.strip().upper()
+        if len(arr_airport) >= 3 and arr_airport[:3].isalpha():
+            arr_iata = arr_airport[:3]
+            query += " AND arr_airport_iata = ?"
+            params.append(arr_iata)
+        else:
+            query += " AND arr_airport LIKE ?"
+            params.append(f"%{arr_airport}%")
     if departure_date:
         query += " AND date = ?"
         params.append(departure_date)
@@ -268,7 +280,7 @@ def get_airports():
         {
             "name": r[0],
             "iata": r[1],
-            "display": f"{r[0]} - {r[1]}"
+            "display": f"{r[1]} - {r[0]}"
         }
         for r in rows
     ]

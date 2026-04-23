@@ -1,9 +1,14 @@
 let start = 1;
 let end = 5;
 const pageSize = 5;
+let airports = [];
 
 const resultsDiv = document.getElementById("flightResults");
 const pageInfo = document.getElementById("pageInfo");
+const fromInput = document.getElementById("from");
+const toInput = document.getElementById("to");
+const fromBox = document.getElementById("from-suggest");
+const toBox = document.getElementById("to-suggest");
 
 // 12-hour Time formatting
 function formatTime(timeStr) {
@@ -256,4 +261,54 @@ function renderFlights(flights) {
     });
 }
 
+async function loadAirports() {
+    try {
+        const resp = await fetch(`https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/airports`);
+        const data = await resp.json();
+        airports = data.airports;
+    } catch(err) {
+        console.error("Failed to get airports:", err);
+    }
+}
+
+function autoComp(query) {
+    if(!query) return [];
+    return airports.filter(a => a.display.toLowerCase().includes(query.toLowerCase())).slice(0, 10);
+}
+
+function renderSuggest(items, box, input) {
+    box.innerHTML = "";
+    if(items.length === 0) return;
+    items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "suggest-item";
+        div.textContent = item.display;
+
+        div.addEventListener("click", () => {
+            input.value = item.display;
+            box.innerHTML = "";
+        });
+
+        box.appendChild(div);
+    });
+}
+
+fromInput.addEventListener("input", (e) => {
+    const matches = autoComp(e.target.value);
+    renderSuggest(matches, fromBox, fromInput);
+});
+
+toInput.addEventListener("input", (e) => {
+    const matches = autoComp(e.target.value);
+    renderSuggest(matches, toBox, toInput);
+});
+
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".input-wrapper")) {
+        fromBox.innerHTML = "";
+        toBox.innerHTML = "";
+    }
+});
+
+loadAirports();
 loadFlights();
