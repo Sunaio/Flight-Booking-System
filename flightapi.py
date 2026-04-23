@@ -198,36 +198,58 @@ def get_seats(flight_id: int):
 def book_seat(data: dict):
     flight_id = data.get("flight_id")
     seat_number = data.get("seat_number")
+    return_id = data.get("return_id")
+    return_seat = data.get("return_seat")
 
     conn = get_connection()
     cursor = conn.cursor()
 
-    # Check if seat is available
-    cursor.execute(
-    """
-    SELECT is_available FROM flights.seats
-    WHERE flight_id = ? AND seat_number = ?
-    """, (flight_id, seat_number))
+    def book(id, seat):
+        # Check if seat is available
+        cursor.execute(
+        """
+        SELECT is_available FROM flights.seats
+        WHERE flight_id = ? AND seat_number = ?
+        """, (id, seat))
 
-    row = cursor.fetchone()
-    if not row:
+        row = cursor.fetchone()
+        if not row:
+            conn.close()
+            return {"status": "FAILED", "error": "Seat not found"}
+        if row[0] == 0:
+            conn.close()
+            return {"status": "FAILED", "error": "Seat already booked"}
+
+        # Book the seat
+        cursor.execute(
+        """
+        UPDATE flights.seats
+        SET is_available = 0
+        WHERE flight_id = ? AND seat_number = ?
+        """, (id, seat))
+        return {"status": "SUCCESS"}
+
+    try:
+        # Book flight
+        fstatus = book(flight_id, seat_number)
+        if fstatus["status"] == "FAILED":
+            conn.rollback()
+            return fstatus
+    
+        # Book return flight
+        if return_id and return_seat:
+            rstatus = book(return_id, return_seat)
+            if rstatus["status"] == "FAILED":
+                conn.rollback()
+                return rstatus
+
+        conn.commit()
+        return {
+            "status": "SUCCESS",
+            "message": "Booking completed successfully"
+        }
+    finally:
         conn.close()
-        return {"status": "FAILED", "error": "Seat not found"}
-    if row[0] == 0:
-        conn.close()
-        return {"status": "FAILED", "error": "Seat already booked"}
-
-    # Book the seat
-    cursor.execute(
-    """
-    UPDATE flights.seats
-    SET is_available = 0
-    WHERE flight_id = ? AND seat_number = ?
-    """, (flight_id, seat_number))
-
-    conn.commit()
-    conn.close()
-    return {"status": "SUCCESS", "message": f"Seat {seat_number} on flight {flight_id} booked successfully"}
 
 @app.get("/db-test")
 def db_test():
