@@ -1,8 +1,8 @@
-# ✈️ Flight Booking System
+# Flight Booking System
 
 **Purdue 2026 Capstone Project**
 
-A web-based flight booking platform that allows users to search for flights, select seats, and complete bookings with real-time seat availability updates and flight filtering.
+A web-based flight booking platform that allows users to search for flights, select seats, and complete bookings with seat selection and availablity updates and flight filtering.
 
 ---
 
@@ -20,7 +20,7 @@ A web-based flight booking platform that allows users to search for flights, sel
 
 ## Overview
 
-This system is a web-based application that enables passengers to search for flights by departure and arrival airport, filter results by cost, time, and airline, select seats from an interactive cabin map, and complete bookings with instant confirmation.
+This system is a web-based application that enables passengers to search for flights by departure and arrival airport, filter results by cost, time, and airline, and select seats from an interactive cabin map.
 
 ---
 
@@ -29,7 +29,7 @@ This system is a web-based application that enables passengers to search for fli
 - **Flight Search** — Search flights by departure and arrival airport with a selected date
 - **Flight Filtering** — Filter results by price range, departure time, and airline
 - **Seat Selection** — Interactive cabin map for economy, business, and first class
-- **Real-Time Seat Updates** — Seat availability automatically updates when a booking is confirmed
+- **Seat Updates** — Seat availability automatically updates when a booking is confirmed
 - **Booking Confirmation** — Instant confirmation upon completing checkout
 
 ---
@@ -41,7 +41,7 @@ This system is a web-based application that enables passengers to search for fli
 | Frontend     | HTML, CSS, JavaScript       |
 | Backend      | Python, FastAPI             |
 | Database     | Microsoft Azure SQL Server  |
-| Flight Data  | Microsoft Azure API         |
+| API          | Microsoft Azure API Server  |
 | Deployment   | GitHub Pages + Azure        |
 
 ---
