@@ -13,18 +13,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-connection_str = os.getenv("DB_ACCESS_KEY")
-
-def create_connection():
-    return pyodbc.connect(connection_str)
 
 pool = PooledDB(
-    creator=create_connection,
+    creator=pyodbc,
     maxconnections=10,
     mincached=2,
     blocking=True,
-    ping=1
+    ping=1,
+    connargs={"dsn": os.getenv("DB_ACCESS_KEY")}
 )
+
+def get_connection():
+    return pool.connection()
 
 @app.get("/flights")
 def get_flights(next_id: int = 0, limit: int = 5):
