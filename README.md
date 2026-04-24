@@ -90,8 +90,8 @@ Click **Apply Filters** to update the results.
 
 ### Final Note:
 If no flights are loaded after *1-3 minutes* and permanently showing error, this could mean 2 possible things:
-1. Microsoft Azure funding exhausted - Currently as of April 24, 2026, there is $100 worth of free student funding.
-2. Student funds expired - Azure free student funds last for 12 months (1 year) upon obtainment.
+1. **Microsoft Azure funding exhausted** - Currently as of April 24, 2026, there is $100 worth of free student funding.
+2. **Student funds expired** - Azure free student funds last for 12 months (1 year) upon obtainment.
 
 If the funds expired/ran out, I will not be recharging with actual money as the servers are expensive to run.
 
