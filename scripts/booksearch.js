@@ -163,7 +163,7 @@ async function loadFlights() {
         lastCursor = data.pagination.next_cursor;
         document.getElementById("nextPage").disabled = !lastCursor;
         document.getElementById("prevPage").disabled = currentPage === 1;
-        renderFlights(data.data);
+        await renderFlights(data.data);
         pageInfo.textContent = `Page ${currentPage}`;
     } catch (err) {
         console.error("Failed to load flights:", err);
