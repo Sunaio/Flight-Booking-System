@@ -1,6 +1,7 @@
-let start = 1;
-let end = 5;
+let seen_id = 0;
+const limit = 5;
 const pageSize = 5;
+let page = 1;
 let airports = [];
 let selectedTime = null;
 
@@ -132,7 +133,7 @@ async function loadFlights() {
         const searchParams = getSearchParams();
         const filterParams = getFilterParams();
         const base = "https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net";
-        let url = `${base}${get_endpoint()}?start=${start}&end=${end}`;
+        let url = `${base}${get_endpoint()}?limit=${limit}&seen_id=${seen_id}`;
         // Search parameters
         if(searchParams.dep_airport) url += `&dep_airport=${encodeURIComponent(searchParams.dep_airport)}`;
         if(searchParams.arr_airport) url += `&arr_airport=${encodeURIComponent(searchParams.arr_airport)}`;
@@ -150,7 +151,8 @@ async function loadFlights() {
         }
         const data = await res.json();
         renderFlights(data.data);
-        pageInfo.textContent = `Page ${data.pagination.page}`;
+        seen_id = data.next_id;
+        pageInfo.textContent = `Page ${page}`;
     } catch (err) {
         console.error("Failed to load flights:", err);
         resultsDiv.innerHTML = "<p style='color:red'>Failed to load flights</p>";
