@@ -224,68 +224,142 @@
 }
 
 /* Filter Section */
-.filter-header {
-    display: flex;
-    justify-content: center;
-}
-
 .filter-toggle-btn {
-    padding: 0.75rem;
-    background: black;
-    color: white;
-    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.55rem 1.1rem;
+    background: white;
+    color: #1a1a1a;
+    border: 0.5px solid #d0d0d0;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
-    width: 150px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.15s ease;
+}
+
+.filter-toggle-btn:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
 }
 
 .filter-content {
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
 }
 
 .filter-menu {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 0.6rem;
     background: white;
-    margin-top: 0.5rem;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 0.5px solid #e8e8e8;
+    border-radius: 12px;
+    max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transform: translateY(-10px);
-    transition: 0.3s ease;
-    max-height: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
 }
 
 .filter-menu.active {
+    max-height: 600px;
     opacity: 1;
-    transform: translateY(0);
-    max-height: 400px;
+}
+
+.filter-menu.active {
+    max-height: 600px;
+    opacity: 1;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: center;
 }
 
 .filter-form {
+    padding: 1.25rem;
     display: flex;
-    gap: 1rem;
     flex-direction: column;
+    gap: 1.1rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    min-width: 150px;
+    gap: 5px;
 }
 
+.filter-group label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 0.55rem 0.75rem;
+    border: 0.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f9f9f9;
+    color: #1a1a1a;
+    transition: 0.15s ease;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    outline: none;
+    border-color: #1D9E75;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.08);
+}
+
+.filter-divider {
+    height: 0.5px;
+    background: #f0f0f0;
+}
+
+.filter-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.25rem;
+}
+
+.btn-clear {
+    font-size: 13px;
+    color: #999;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-clear:hover { color: #555; }
+
 .filter-btn {
-    padding: 0.5rem 1rem;
-    background: var(--primary-color);
+    padding: 0.55rem 1.4rem;
+    background: #1D9E75;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
+    transition: 0.15s ease;
 }
+
+.filter-btn:hover { background: #0F6E56; }
+
 
 /* Logo */
 .airline-sec {
@@ -300,34 +374,55 @@
     object-fit: contain;
 }
 
+/* Time filter buttons */
 .time-buttons {
     display: flex;
-    gap: 10px;
-    margin-top: 8px;
+    gap: 8px;
+    justify-content: center;
 }
 
 .time-btn {
-    flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 14px;
-    background: #fff;
-    border: 0.5px solid #ccc;
-    border-radius: 8px;
+    gap: 4px;
+    padding: 12px 6px;
+    background: #f9f9f9;
+    border: 0.5px solid #e0e0e0;
+    border-radius: 10px;
     cursor: pointer;
-    transition: 0.2s ease;
-    font-size: 28px;
+    transition: all 0.15s ease;
+    font-size: 20px;
+    color: #1a1a1a;
+    line-height: 1;
+    width: 25%;
 }
 
+.time-btn::after {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    letter-spacing: 0.01em;
+}
+
+.time-btn[data-time="morning"]::after { content: "Morning"; }
+.time-btn[data-time="noon"]::after    { content: "Noon"; }
+.time-btn[data-time="evening"]::after { content: "Evening"; }
+.time-btn[data-time="night"]::after   { content: "Night"; }
+
 .time-btn:hover {
-    background: #00b8d4;
-    border-color: #999;
-    transform: translateY(-2px);
+    background: white;
+    border-color: #bbb;
+    transform: translateY(-1px);
 }
 
 .time-btn.active {
-    background: #00b8d4;
-    border-color: #00b8d4;
-    color: white;
+    background: #e1f5ee;
+    border-color: #1D9E75;
+    color: #085041;
+}
+
+.time-btn.active::after {
+    color: #0F6E56;
 }

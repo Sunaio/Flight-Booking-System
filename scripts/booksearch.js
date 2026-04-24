@@ -44,6 +44,14 @@ toggleBtn.addEventListener("click", () => {
     filterMenu.classList.toggle("active");
 });
 
+document.getElementById("clearFilters").addEventListener("click", () => {
+    document.getElementById("minPrice").value = "";
+    document.getElementById("maxPrice").value = "";
+    document.getElementById("airline").value = "";
+    timeButtons.forEach(b => b.classList.remove("active"));
+    selectedTime = null;
+});
+
 document.getElementById("prevPage").addEventListener("click", () => {
     if (cursorHistory.length > 1) {
         cursorHistory.pop();
@@ -253,8 +261,8 @@ async function renderFlights(flights) {
         };
 
         bookBtn.addEventListener("click", () => {
-        const flightsParam = encodeURIComponent(JSON.stringify(flightData));
-        window.location.href = `checkout.html?flight=${flightsParam}`;
+            const flightsParam = encodeURIComponent(JSON.stringify(flightData));
+            window.location.href = `checkout.html?flight=${flightsParam}`;
         });
         resultsDiv.appendChild(card);
     });

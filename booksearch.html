@@ -44,52 +44,55 @@
         <div class="filter-container">
             <div class="filter-header">
                 <button id="filterToggle" class="filter-toggle-btn">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M2 4h12M4 8h8M6 12h4"/>
+                    </svg>
                     Filters
                 </button>
             </div>
             <div class="filter-content">
                 <div id="filterMenu" class="filter-menu">
                     <form id="filter-form" class="filter-form">
-                        <!-- Price -->
-                        <div class="filter-group">
-                            <label for="minPrice">Min Price</label>
-                            <input type="number" id="minPrice" placeholder="$429">
-                        </div>
-                        <div class="filter-group">
-                            <label for="maxPrice">Max Price</label>
-                            <input type="number" id="maxPrice" placeholder="$4829">
-                        </div>
-                        <!-- Time -->
-                         <div class="filter-group">
-                            <label>Departure Times</label>
-                            <div class="time-buttons">
-                                <button type="button" class="time-btn" data-time="morning">
-                                    🌅
-                                </button>
-                                <button type="button" class="time-btn" data-time="noon">
-                                    🌇
-                                </button>
-                                <button type="button" class="time-btn" data-time="evening">
-                                    🌆
-                                </button>
-                                <button type="button" class="time-btn" data-time="night">
-                                    🌃
-                                </button>
+                    <!-- Price -->
+                        <div class="form-row">
+                            <div class="filter-group">
+                                <label for="minPrice">Min price</label>
+                                <input type="number" id="minPrice" placeholder="$0">
                             </div>
-                         </div>
-                        <!-- Airline -->
-                        <div class="filter-group">
-                            <label for="airline">Airline</label>
-                            <select id="airline">
-                                <option value="">Any</option>
-                                <option value="American Airlines">American Airlines</option>
-                                <option value="Delta Airlines">Delta Airlines</option>
-                                <option value="Southwest Airlines">Southwest Airlines</option>
-                                <option value="Spirit Airlines">Spirit Airlines</option>
-                                <option value="United Airlines">United Airlines</option>
-                            </select>
+                            <div class="filter-group">
+                                <label for="maxPrice">Max price</label>
+                                <input type="number" id="maxPrice" placeholder="Any">
+                            </div>
                         </div>
-                        <button type="submit" class="filter-btn">Apply</button>
+                    <div class="filter-divider"></div>
+                    <!-- Time -->
+                    <div class="filter-group">
+                        <label>Departure time</label>
+                        <div class="time-buttons">
+                            <button type="button" class="time-btn" data-time="morning">🌅</button>
+                            <button type="button" class="time-btn" data-time="noon">🌇</button>
+                            <button type="button" class="time-btn" data-time="evening">🌆</button>
+                            <button type="button" class="time-btn" data-time="night">🌃</button>
+                        </div>
+                    </div>
+                    <div class="filter-divider"></div>
+                    <!-- Airline -->
+                    <div class="filter-group">
+                        <label for="airline">Airline</label>
+                        <select id="airline">
+                            <option value="">Any airline</option>
+                            <option value="American Airlines">American Airlines</option>
+                            <option value="Delta Airlines">Delta Airlines</option>
+                            <option value="Southwest Airlines">Southwest Airlines</option>
+                            <option value="Spirit Airlines">Spirit Airlines</option>
+                            <option value="United Airlines">United Airlines</option>
+                        </select>
+                    </div>
+                    <!-- Footer -->
+                    <div class="filter-footer">
+                        <button type="button" class="btn-clear" id="clearFilters">Clear all</button>
+                        <button type="submit" class="filter-btn">Apply filters</button>
+                    </div>
                     </form>
                 </div>
             </div>
