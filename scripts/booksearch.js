@@ -5,6 +5,7 @@ const pageSize = 5;
 let airports = [];
 let selectedTime = null;
 let lastCursor = null;
+const base = "https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net";
 
 const resultsDiv = document.getElementById("flightResults");
 const pageInfo = document.getElementById("pageInfo");
@@ -134,7 +135,6 @@ async function loadFlights() {
     try {
         const searchParams = getSearchParams();
         const filterParams = getFilterParams();
-        const base = "https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net";
         let url = `${base}${get_endpoint()}?next_id=${next_id}&limit=${pageSize}`;
         // Search parameters
         if(searchParams.dep_airport) url += `&dep_airport=${encodeURIComponent(searchParams.dep_airport)}`;
@@ -165,7 +165,7 @@ async function loadFlights() {
 
 async function getSeats(flightIds) {
     try {
-        const res = await fetch(`https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights/${flightIds.join(",")}/seats/summary`);
+        const res = await fetch(`${base}/flights/seats/batch?ids=${flightIds.join(",")}`);
         if (!res.ok) {
             throw new Error(`HTTP error: ${res.status}`);
         }
@@ -173,6 +173,7 @@ async function getSeats(flightIds) {
         return data;
     } catch (err) {
         console.error("Failed to load seat information:", err);
+        return {};
     }
 }
 
@@ -188,7 +189,7 @@ function getAirlineLogo(airline) {
     return logos[airline] || "assets/nothing.png";
 }
 
-function renderFlights(flights) {
+async function renderFlights(flights) {
     resultsDiv.innerHTML = "";
     if (!flights || flights.length === 0) {
         resultsDiv.innerHTML = "<p>No flights found.</p>";
@@ -196,7 +197,7 @@ function renderFlights(flights) {
     }
 
     const flightIds = flights.map(f => f.flight_id);
-    const seatsMap = await loadSeatsForFlights(flightIds);
+    const seatsMap = await getSeats(flightIds);
 
     flights.forEach(flight => {
         const seatInfo = seatsMap[flight.flight_id] || { booked_seats: 0, total_seats: 0 };

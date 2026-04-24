@@ -164,15 +164,15 @@ def get_flight_filters(
         }
     }
 
-@app.get("/flights/{flight_id}/seats/summary")
-def get_seat_summary(ids: str):
+@app.get("/flights/seats/batch")
+def get_seats_batch(ids: str):
     conn = get_connection()
     cursor = conn.cursor()
 
     id_list = [int(i) for i in ids.split(",")]
     hold = ",".join("?" * len(id_list))
 
-    query = """
+    query = f"""
     SELECT 
         flight_id,
         COUNT(*) AS total_seats,
@@ -181,9 +181,10 @@ def get_seat_summary(ids: str):
     FROM flights.seats
     WHERE flight_id IN ({hold})
     GROUP BY flight_id
-    """
+    """ 
+
     cursor.execute(query, id_list)
-    rows = cursor.fetchone()
+    rows = cursor.fetchall()
     conn.close()
     return {row[0]: {
         "flight_id": row[0],
