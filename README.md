@@ -89,7 +89,7 @@ Click **Apply Filters** to update the results.
 5. Check your information and then click **Submit**
 
 ### Final Note:
-If no flights are loaded after *1-3 minutes*, this could mean 2 possible things:
+If no flights are loaded after *1-3 minutes* and permanent showing error, this could mean 2 possible things:
 1. Microsoft Azure funding exhausted - Currently as of April 24, 2026, there is $100 worth of free student funding.
 2. Student funds expired - Azure free student funds last for 12 months (1 year) upon obtainment.
 
