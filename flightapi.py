@@ -125,9 +125,10 @@ def get_flight_filters(
         params.append(airline_type)
     if time_range:
         ranges = {
-            "morning":   (5, 11),
-            "afternoon": (12, 17),
-            "night":     (18, 23)
+            "morning": (5, 11),
+            "noon": (12, 17),
+            "evening": (18,23),
+            "night": (0, 4)
         }
         if time_range in ranges:
             lo, hi = ranges[time_range]
