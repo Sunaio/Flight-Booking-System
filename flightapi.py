@@ -94,13 +94,23 @@ def get_flight_filters(
     params = [next_id]
 
     if dep_airport:
-        dep_airport = dep_airport.strip().upper()
-        query += " AND (dep_airport_iata = ? OR dep_airport LIKE ?)"
-        params.extend([dep_airport, f"%{dep_airport}%"])
+        dep_iata = dep_airport.strip().upper()
+        dep_name = dep_airport.strip()
+        query += """ AND (
+            dep_airport_iata = ? 
+            OR dep_airport LIKE ? 
+            OR dep_airport_iata + ' - ' + dep_airport LIKE ?
+        )"""
+        params.extend([dep_iata, f"%{dep_name}%", f"%{dep_name}%"])
     if arr_airport:
-        arr_airport = arr_airport.strip().upper()
-        query += " AND (arr_airport_iata = ? OR arr_airport LIKE ?)"
-        params.extend([arr_airport, f"%{arr_airport}%"])
+        arr_iata = arr_airport.strip().upper()
+        arr_name = arr_airport.strip()
+        query += """ AND (
+            arr_airport_iata = ? 
+            OR arr_airport LIKE ? 
+            OR arr_airport_iata + ' - ' + arr_airport LIKE ?
+        )"""
+        params.extend([arr_iata, f"%{arr_name}%", f"%{arr_name}%"])
     if departure_date:
         query += " AND date = ?"
         params.append(departure_date)
