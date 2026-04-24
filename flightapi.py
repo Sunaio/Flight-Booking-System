@@ -40,7 +40,7 @@ def get_flights(next_id: int = 0, limit: int = 5):
     FROM flights.flight_data
     WHERE flight_id > ?
     ORDER BY flight_id
-    FETCH NEXT ? ROWS ONLY
+    OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY
     """
 
     cursor.execute(query, (next_id, limit))
