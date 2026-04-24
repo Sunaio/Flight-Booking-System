@@ -9,6 +9,8 @@ const fromInput = document.getElementById("from");
 const toInput = document.getElementById("to");
 const fromBox = document.getElementById("from-suggest");
 const toBox = document.getElementById("to-suggest");
+const timeButtons = document.querySelectorAll(".time-btn");
+const timeInput = document.getElementById("timeFilter");
 
 // 12-hour Time formatting
 function formatTime(timeStr) {
@@ -308,6 +310,15 @@ document.addEventListener("click", (e) => {
         fromBox.innerHTML = "";
         toBox.innerHTML = "";
     }
+});
+
+timeButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        timeButtons.forEach(b => b.classList.remove("active"));
+
+        btn.classList.add("active");
+        timeInput.value = btn.dataset.time;
+    });
 });
 
 loadAirports();

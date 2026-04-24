@@ -59,6 +59,22 @@
                             <label for="maxPrice">Max Price</label>
                             <input type="number" id="maxPrice" placeholder="$4829">
                         </div>
+                        <!-- Time -->
+                         <div class="filter-group">
+                            <label>Departure Time</label>
+                            <div class="time-buttons">
+                                <button type="button" class="time-btn" data-time="morning">
+                                    🌅
+                                </button>
+                                <button type="button" class="time-btn" data-time="afternoon">
+                                    🌇
+                                </button>
+                                <button type="button" class="time-btn" data-time="night">
+                                    🌃
+                                </button>
+                            </div>
+                            <input type="hidden" id="timeFilter" value="">
+                         </div>
                         <!-- Airline -->
                         <div class="filter-group">
                             <label for="airline">Airline</label>

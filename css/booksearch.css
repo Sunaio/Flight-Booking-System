@@ -299,3 +299,35 @@
     height: 24px;
     object-fit: contain;
 }
+
+.time-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.time-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    background: #fff;
+    border: 0.5px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-size: 28px;
+}
+
+.time-btn:hover {
+    background: #00b8d4;
+    border-color: #999;
+    transform: translateY(-2px);
+}
+
+.time-btn.active {
+    background: #00b8d4;
+    border-color: #00b8d4;
+    color: white;
+}

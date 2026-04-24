@@ -126,7 +126,13 @@ def get_flight_filters(
     if airline_type:
         query += " AND owner = ?"
         params.append(airline_type)
-
+    if time_range:
+        if time_range == "morning":
+            query += " AND DATEPART(HOUR, time) BETWEEN 5 AND 11"
+        elif time_range == "afternoon":
+            query += " AND DATEPART(HOUR, time) BETWEEN 12 AND 17"
+        elif time_range == "night":
+            query += " AND DATEPART(HOUR, time) BETWEEN 18 AND 23"
     query += """
     ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
