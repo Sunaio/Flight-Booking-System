@@ -190,7 +190,6 @@ function getAirlineLogo(airline) {
 }
 
 async function renderFlights(flights) {
-    resultsDiv.innerHTML = "";
     if (!flights || flights.length === 0) {
         resultsDiv.innerHTML = "<p>No flights found.</p>";
         return;
@@ -198,7 +197,7 @@ async function renderFlights(flights) {
 
     const flightIds = flights.map(f => f.flight_id);
     const seatsMap = await getSeats(flightIds);
-
+    resultsDiv.innerHTML = "";
     flights.forEach(flight => {
         const seatInfo = seatsMap[flight.flight_id] || { booked_seats: 0, total_seats: 0 };
         const card = document.createElement("div");
