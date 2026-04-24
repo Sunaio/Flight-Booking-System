@@ -18,12 +18,14 @@ def get_connection():
     return pyodbc.connect(connection_str)
 
 @app.get("/flights")
-def get_flights(limit: int = 5, seen_id: int = 0):
+def get_flights(start: int = 1, end: int = 5):
     conn = get_connection()
     cursor = conn.cursor()
+    offset = start - 1
+    limit = end - start + 1
 
     query = """
-    SELECT TOP (?)
+    SELECT 
         owner,
         flight_id ,
         flight_number,
@@ -37,19 +39,23 @@ def get_flights(limit: int = 5, seen_id: int = 0):
         time_arr AS arrival_time,
         cost
     FROM flights.flight_data
-    WHERE flight_id > ?
     ORDER BY flight_id
+    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
 
-    cursor.execute(query, (limit, seen_id))
+    cursor.execute(query, (offset, limit))
     columns = [col[0] for col in cursor.description]
     rows = cursor.fetchall()
     data = [dict(zip(columns, row)) for row in rows]
     conn.close()
-    next_id = data[-1]["flight_id"] if data else seen_id
     return {
         "data": data,
-        "next_id": next_id
+        "pagination": {
+            "start": start,
+            "end": end,
+            "page_size": limit,
+            "page": ((start - 1) // limit) + 1
+        }
     }
 
 @app.get("/flight/filters")
