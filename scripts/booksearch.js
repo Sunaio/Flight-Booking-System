@@ -136,27 +136,33 @@ async function loadFlights() {
         const searchParams = getSearchParams();
         const filterParams = getFilterParams();
         let url = `${base}${get_endpoint()}?next_id=${next_id}&limit=${pageSize}`;
-        // Search parameters
+
         if(searchParams.dep_airport) url += `&dep_airport=${encodeURIComponent(searchParams.dep_airport)}`;
         if(searchParams.arr_airport) url += `&arr_airport=${encodeURIComponent(searchParams.arr_airport)}`;
         if(searchParams.dep_time) url += `&departure_date=${encodeURIComponent(searchParams.dep_time)}`;
-
-        // Filter parameters
         if(filterParams.min_price) url += `&min_cost=${encodeURIComponent(filterParams.min_price)}`;
         if(filterParams.max_price) url += `&max_cost=${encodeURIComponent(filterParams.max_price)}`;
         if(filterParams.airline) url += `&airline_type=${encodeURIComponent(filterParams.airline)}`;
         if(filterParams.time_range) url += `&time_range=${encodeURIComponent(filterParams.time_range)}`;
 
         const res = await fetch(url);
-        if (!res.ok) {
-            throw new Error(`HTTP error: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
         const data = await res.json();
+
         lastCursor = data.pagination.next_cursor;
         document.getElementById("nextPage").disabled = !lastCursor;
         document.getElementById("prevPage").disabled = currentPage === 1;
-        renderFlights(data.data);
         pageInfo.textContent = `Page ${currentPage}`;
+
+        const flightIds = data.data.map(f => f.flight_id);
+        const [_, seatsMap] = await Promise.all([
+            Promise.resolve(),
+            getSeats(flightIds)
+        ]);
+
+        resultsDiv.innerHTML = "";
+        await renderFlights(data.data, seatsMap);  // pass seatsMap in
+
     } catch (err) {
         console.error("Failed to load flights:", err);
         resultsDiv.innerHTML = "<p style='color:red'>Failed to load flights</p>";
@@ -189,16 +195,12 @@ function getAirlineLogo(airline) {
     return logos[airline] || "assets/nothing.png";
 }
 
-async function renderFlights(flights) {
-    resultsDiv.innerHTML = "";
+async function renderFlights(flights, seatsMap) {
     if (!flights || flights.length === 0) {
         resultsDiv.innerHTML = "<p>No flights found.</p>";
         return;
     }
-
-    const flightIds = flights.map(f => f.flight_id);
-    const seatsMap = await getSeats(flightIds);
-
+    resultsDiv.innerHTML = "";
     flights.forEach(flight => {
         const seatInfo = seatsMap[flight.flight_id] || { booked_seats: 0, total_seats: 0 };
         const card = document.createElement("div");
