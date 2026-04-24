@@ -142,7 +142,7 @@ async function loadFlights() {
         if(filterParams.min_price) url += `&min_cost=${encodeURIComponent(filterParams.min_price)}`;
         if(filterParams.max_price) url += `&max_cost=${encodeURIComponent(filterParams.max_price)}`;
         if(filterParams.airline) url += `&airline_type=${encodeURIComponent(filterParams.airline)}`;
-        if(filterParams.time_range) url += `$time_range=${encodeURIComponent(filterParams.airline)}`;
+        if(filterParams.time_range) url += `&time_range=${encodeURIComponent(filterParams.time_range)}`;
 
         const res = await fetch(url);
         if (!res.ok) {
