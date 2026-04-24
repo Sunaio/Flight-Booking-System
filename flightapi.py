@@ -26,10 +26,11 @@ def get_flights(start: int = 1, end: int = 5):
 
     query = """
     SELECT 
-        owner,
-        flight_id ,
-        flight_number,
+        owner AS owner,
+        flight_id AS flight_id,
+        flight_number AS flight_number,
         type AS plane_type,
+        type_icao AS plane_icao,
         dep_airport_iata AS dep_airport,
         arr_airport_iata AS arr_airport,
         dep_airport AS dep_airport_name,
@@ -37,9 +38,9 @@ def get_flights(start: int = 1, end: int = 5):
         date AS departure_date,
         time AS departure_time,
         time_arr AS arrival_time,
-        cost
+        cost AS cost
     FROM flights.flight_data
-    ORDER BY flight_id
+    ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
 
@@ -81,6 +82,7 @@ def get_flight_filters(
         flight_id,
         flight_number,
         type AS plane_type,
+        type_icao AS plane_icao,
         dep_airport_iata AS dep_airport,
         arr_airport_iata AS arr_airport,
         dep_airport AS dep_airport_name,
@@ -143,7 +145,7 @@ def get_flight_filters(
         elif time_range == "night":
             query += " AND DATEPART(HOUR, time) BETWEEN 18 AND 23"
     query += """
-    ORDER BY flight_id
+    ORDER BY (SELECT NULL)
     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """
     params.extend([offset, limit])
