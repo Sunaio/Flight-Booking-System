@@ -60,8 +60,8 @@ def get_flights(next_id: int = 0, limit: int = 5):
 
 @app.get("/flight/filters")
 def get_flight_filters(
-    start: int = 1,
-    end: int = 5,
+    next_id: int = 0,
+    limit: int = 5,
     dep_airport: str = None,
     arr_airport: str = None,
     departure_date: str = None,
@@ -72,58 +72,35 @@ def get_flight_filters(
 ):
     conn = get_connection()
     cursor = conn.cursor()
-    offset = start - 1
-    limit = end - start + 1
 
     query = """
-    SELECT 
-        owner,
-        flight_id,
-        flight_number,
-        type AS plane_type,
-        type_icao AS plane_icao,
-        dep_airport_iata AS dep_airport,
-        arr_airport_iata AS arr_airport,
-        dep_airport AS dep_airport_name,
-        arr_airport AS arr_airport_name,
-        date AS departure_date,
-        time AS departure_time,
-        time_arr AS arrival_time,
-        cost
-    FROM flights.flight_data
-    WHERE 1=1
+        SELECT 
+            owner,
+            flight_id,
+            flight_number,
+            type AS plane_type,
+            type_icao AS plane_icao,
+            dep_airport_iata AS dep_airport,
+            arr_airport_iata AS arr_airport,
+            dep_airport AS dep_airport_name,
+            arr_airport AS arr_airport_name,
+            date AS departure_date,
+            time AS departure_time,
+            time_arr AS arrival_time,
+            cost
+        FROM flights.flight_data
+        WHERE flight_id > ?
     """
-    params = []
+    params = [next_id]
 
-    # Filters
     if dep_airport:
         dep_airport = dep_airport.strip().upper()
-        query += """
-        AND (
-            dep_airport_iata = ?
-            OR dep_airport LIKE ?
-            OR dep_airport_iata + ' - ' + dep_airport LIKE ?
-        )
-        """
-        params.extend([
-            dep_airport,
-            f"%{dep_airport}%",
-            f"%{dep_airport}%"
-        ])
+        query += " AND (dep_airport_iata = ? OR dep_airport LIKE ?)"
+        params.extend([dep_airport, f"%{dep_airport}%"])
     if arr_airport:
         arr_airport = arr_airport.strip().upper()
-        query += """
-        AND (
-            arr_airport_iata = ?
-            OR arr_airport LIKE ?
-            OR arr_airport_iata + ' - ' + arr_airport LIKE ?
-        )
-        """
-        params.extend([
-            arr_airport,
-            f"%{arr_airport}%",
-            f"%{arr_airport}%"
-        ])
+        query += " AND (arr_airport_iata = ? OR arr_airport LIKE ?)"
+        params.extend([arr_airport, f"%{arr_airport}%"])
     if departure_date:
         query += " AND date = ?"
         params.append(departure_date)
@@ -137,30 +114,28 @@ def get_flight_filters(
         query += " AND owner = ?"
         params.append(airline_type)
     if time_range:
-        if time_range == "morning":
-            query += " AND DATEPART(HOUR, time) BETWEEN 5 AND 11"
-        elif time_range == "afternoon":
-            query += " AND DATEPART(HOUR, time) BETWEEN 12 AND 17"
-        elif time_range == "night":
-            query += " AND DATEPART(HOUR, time) BETWEEN 18 AND 23"
-    query += """
-    ORDER BY (SELECT NULL)
-    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
-    """
-    params.extend([offset, limit])
+        ranges = {
+            "morning":   (5, 11),
+            "afternoon": (12, 17),
+            "night":     (18, 23)
+        }
+        if time_range in ranges:
+            lo, hi = ranges[time_range]
+            query += f" AND DATEPART(HOUR, time) BETWEEN {lo} AND {hi}"
+
+    query += " ORDER BY flight_id OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY"
+    params.append(limit)
 
     cursor.execute(query, params)
     columns = [col[0] for col in cursor.description]
     rows = cursor.fetchall()
-    data = [dict(zip(columns, row)) for row in rows]
     conn.close()
+    data = [dict(zip(columns, row)) for row in rows]
     return {
         "data": data,
         "pagination": {
-            "start": start,
-            "end": end,
-            "page_size": limit,
-            "page": ((start - 1) // limit) + 1
+            "next_cursor": data[-1]["flight_id"] if data else None,
+            "limit": limit
         }
     }
 
