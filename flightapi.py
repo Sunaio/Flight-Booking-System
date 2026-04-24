@@ -165,9 +165,12 @@ def get_flight_filters(
     }
 
 @app.get("/flights/{flight_id}/seats/summary")
-def get_seat_summary(flight_id: int):
+def get_seat_summary(ids: str):
     conn = get_connection()
     cursor = conn.cursor()
+
+    id_list = [int(i) for i in ids.split(",")]
+    hold = ",".join("?" * len(id_list))
 
     query = """
     SELECT 
@@ -176,25 +179,18 @@ def get_seat_summary(flight_id: int):
         SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS unbooked_seats,
         SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) AS booked_seats
     FROM flights.seats
-    WHERE flight_id = ?
+    WHERE flight_id IN ({hold})
     GROUP BY flight_id
     """
-    cursor.execute(query, (flight_id,))
+    cursor.execute(query, id_list)
     rows = cursor.fetchone()
     conn.close()
-    if not rows:
-        return {
-            "flight_id": flight_id,
-            "total_seats": 0,
-            "unbooked_seats": 0,
-            "booked_seats": 0
-        }
-    return {
-        "flight_id": rows[0],
-        "total_seats": rows[1],
-        "unbooked_seats": rows[2],
-        "booked_seats": rows[3]
-    }
+    return {row[0]: {
+        "flight_id": row[0],
+        "total_seats": row[1],
+        "unbooked_seats": row[2],
+        "booked_seats": row[3]
+    } for row in rows}
 
 @app.get("/flights/{flight_id}/seats")
 def get_seats(flight_id: int):
@@ -209,7 +205,7 @@ def get_seats(flight_id: int):
     WHERE flight_id = ?
     ORDER BY seat_number
     """
-    cursor.execute(query, (flight_id,))
+    cursor.execute(query, flight_id)
     rows = cursor.fetchall()
     conn.close()
     return {

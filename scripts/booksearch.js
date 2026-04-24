@@ -145,7 +145,7 @@ async function loadFlights() {
         if(filterParams.min_price) url += `&min_cost=${encodeURIComponent(filterParams.min_price)}`;
         if(filterParams.max_price) url += `&max_cost=${encodeURIComponent(filterParams.max_price)}`;
         if(filterParams.airline) url += `&airline_type=${encodeURIComponent(filterParams.airline)}`;
-        if(filterParams.time_range) url += `&time_range=${encodeURIComponent(filterParams.airline)}`;
+        if(filterParams.time_range) url += `&time_range=${encodeURIComponent(filterParams.time_range)}`;
 
         const res = await fetch(url);
         if (!res.ok) {
@@ -163,9 +163,9 @@ async function loadFlights() {
     }
 }
 
-async function getSeats(flightId) {
+async function getSeats(flightIds) {
     try {
-        const res = await fetch(`https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights/${flightId}/seats/summary`);
+        const res = await fetch(`https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net/flights/${flightIds.join(",")}/seats/summary`);
         if (!res.ok) {
             throw new Error(`HTTP error: ${res.status}`);
         }
@@ -173,12 +173,6 @@ async function getSeats(flightId) {
         return data;
     } catch (err) {
         console.error("Failed to load seat information:", err);
-        return {
-            flight_id: flightId,
-            total_seats: 0,
-            unbooked_seats: 0,
-            booked_seats: 0
-        };
     }
 }
 
@@ -200,7 +194,12 @@ function renderFlights(flights) {
         resultsDiv.innerHTML = "<p>No flights found.</p>";
         return;
     }
+
+    const flightIds = flights.map(f => f.flight_id);
+    const seatsMap = await loadSeatsForFlights(flightIds);
+
     flights.forEach(flight => {
+        const seatInfo = seatsMap[flight.flight_id] || { booked_seats: 0, total_seats: 0 };
         const card = document.createElement("div");
         card.className = "flight-card";
         card.innerHTML = `
@@ -226,9 +225,7 @@ function renderFlights(flights) {
                     <span class="route-arrow">→</span>
                     <span>${flight.arr_airport_name || "Unknown Arrival Airport Name"}</span>
                 </div>
-                <div class="seats">
-                    <span> Loading seats... </span>
-                </div>
+                <div class="seats">👤 ${seatInfo.booked_seats}/${seatInfo.total_seats}</div>
                 <div class="date">
                     <span>${flight.departure_date || "Unknown Date"}</span>
                 </div>
@@ -259,15 +256,6 @@ function renderFlights(flights) {
         const flightsParam = encodeURIComponent(JSON.stringify(flightData));
         window.location.href = `checkout.html?flight=${flightsParam}`;
         });
-
-        const seatsDiv = card.querySelector(".seats");
-        getSeats(flight.flight_id).then(seatInfo => {
-            const seatText = `👤 ${seatInfo.booked_seats}/${seatInfo.total_seats}`;
-            seatsDiv.textContent = seatText;
-        }).catch(() => {
-            seatsDiv.textContent = "Seats: Unknown";
-        });
-
         resultsDiv.appendChild(card);
     });
 }
@@ -331,7 +319,7 @@ timeButtons.forEach(btn => {
 });
 
 function resetPagination() {
-    afterId = 0;
+    next_id = 0;
     cursorHistory = [0];
     currentPage = 1;
     lastCursor = null;
