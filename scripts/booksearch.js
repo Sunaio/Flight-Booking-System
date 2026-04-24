@@ -1,8 +1,10 @@
-let start = 1;
-let end = 5;
+let next_id = 0;
+let cursorHistory = [0];
+let currentPage = 1;
 const pageSize = 5;
 let airports = [];
 let selectedTime = null;
+let lastCursor = null;
 
 const resultsDiv = document.getElementById("flightResults");
 const pageInfo = document.getElementById("pageInfo");
@@ -42,23 +44,26 @@ toggleBtn.addEventListener("click", () => {
 });
 
 document.getElementById("prevPage").addEventListener("click", () => {
-    if (start > 1) {
-        start = Math.max(1, start - pageSize);
-        end = start + pageSize - 1;
+    if (cursorHistory.length > 1) {
+        cursorHistory.pop();
+        next_id = cursorHistory[cursorHistory.length - 1];
+        currentPage--;
         loadFlights();
     }
 });
 
 document.getElementById("nextPage").addEventListener("click", () => {
-    start = end + 1;
-    end = start + pageSize - 1;
-    loadFlights();
+    if (lastCursor) {
+        cursorHistory.push(next_id);
+        next_id = lastCursor;
+        currentPage++;
+        loadFlights();
+    }
 });
 
 document.getElementById("search-form").addEventListener("submit", (e) => {
     e.preventDefault();
-    start = 1;
-    end = pageSize;
+    resetPagination();
     loadFlights();
 });
 
@@ -97,15 +102,13 @@ function getFilterParams() {
 // Filter and Search button handler
 document.getElementsByClassName("search-btn")[0].addEventListener("click", (e) => {
     e.preventDefault();
-    start = 1;
-    end = pageSize;
+    resetPagination();
     loadFlights();
 });
 
 document.getElementsByClassName("filter-btn")[0].addEventListener("click", (e) => {
     e.preventDefault();
-    start = 1;
-    end = pageSize;
+    resetPagination();
     loadFlights();
 });
 
@@ -132,7 +135,7 @@ async function loadFlights() {
         const searchParams = getSearchParams();
         const filterParams = getFilterParams();
         const base = "https://flightapi-hbcdfpabdqhqbudb.eastus-01.azurewebsites.net";
-        let url = `${base}${get_endpoint()}?start=${start}&end=${end}`;
+        let url = `${base}${get_endpoint()}?next_id=${next_id}&limit=${pageSize}`;
         // Search parameters
         if(searchParams.dep_airport) url += `&dep_airport=${encodeURIComponent(searchParams.dep_airport)}`;
         if(searchParams.arr_airport) url += `&arr_airport=${encodeURIComponent(searchParams.arr_airport)}`;
@@ -149,8 +152,11 @@ async function loadFlights() {
             throw new Error(`HTTP error: ${res.status}`);
         }
         const data = await res.json();
+        lastCursor = data.pagination.next_cursor;
+        document.getElementById("nextPage").disabled = !lastCursor;
+        document.getElementById("prevPage").disabled = currentPage === 1;
         renderFlights(data.data);
-        pageInfo.textContent = `Page ${data.pagination.page}`;
+        pageInfo.textContent = `Page ${currentPage}`;
     } catch (err) {
         console.error("Failed to load flights:", err);
         resultsDiv.innerHTML = "<p style='color:red'>Failed to load flights</p>";
@@ -323,6 +329,13 @@ timeButtons.forEach(btn => {
         selectedTime = btn.dataset.time;
     });
 });
+
+function resetPagination() {
+    afterId = 0;
+    cursorHistory = [0];
+    currentPage = 1;
+    lastCursor = null;
+}
 
 loadAirports();
 loadFlights();
