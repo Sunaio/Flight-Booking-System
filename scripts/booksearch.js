@@ -2,6 +2,7 @@ let start = 1;
 let end = 5;
 const pageSize = 5;
 let airports = [];
+let selectedTime = null;
 
 const resultsDiv = document.getElementById("flightResults");
 const pageInfo = document.getElementById("pageInfo");
@@ -10,7 +11,6 @@ const toInput = document.getElementById("to");
 const fromBox = document.getElementById("from-suggest");
 const toBox = document.getElementById("to-suggest");
 const timeButtons = document.querySelectorAll(".time-btn");
-const timeInput = document.getElementById("timeFilter");
 
 // 12-hour Time formatting
 function formatTime(timeStr) {
@@ -85,10 +85,12 @@ function getFilterParams() {
     const min_price = document.getElementById("minPrice").value.trim();
     const max_price = document.getElementById("maxPrice").value.trim();
     const airline = document.getElementById("airline").value;
+    const time_range = selectedTime;
     return {
         min_price: min_price || null,
         max_price: max_price || null,
-        airline: airline || null
+        airline: airline || null,
+        time_range: time_range || null
     };
 }
 
@@ -116,7 +118,7 @@ function filter () {
     const max_price = document.getElementById("maxPrice").value.trim();
     const airline = document.getElementById("airline").value.trim();
 
-    return !!(from || to || departure || min_price || max_price || airline);
+    return !!(from || to || departure || min_price || max_price || airline || selectedTime);
 }
 
 function get_endpoint() {
@@ -140,6 +142,7 @@ async function loadFlights() {
         if(filterParams.min_price) url += `&min_cost=${encodeURIComponent(filterParams.min_price)}`;
         if(filterParams.max_price) url += `&max_cost=${encodeURIComponent(filterParams.max_price)}`;
         if(filterParams.airline) url += `&airline_type=${encodeURIComponent(filterParams.airline)}`;
+        if(filterParams.time_range) url += `$time_range=${encodeURIComponent(filterParams.airline)}`;
 
         const res = await fetch(url);
         if (!res.ok) {
@@ -317,7 +320,7 @@ timeButtons.forEach(btn => {
         timeButtons.forEach(b => b.classList.remove("active"));
 
         btn.classList.add("active");
-        timeInput.value = btn.dataset.time;
+        selectedTime = btn.dataset.time;
     });
 });
 
